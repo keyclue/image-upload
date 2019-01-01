@@ -17,8 +17,9 @@ var express     = require("express"),
     
 //requiring routes
 var commentRoutes    = require("./routes/comments"),
-    photoRoutes = require("./routes/photo_route"),
-    indexRoutes      = require("./routes/index")
+    photoRoutes = require("./routes/photos"),
+    indexRoutes = require("./routes/index"),
+    testRoutes = require("./routes/test")
     
 mongoose.connect("mongodb://localhost/keyclue_image");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -62,6 +63,7 @@ app.locals.cloudinary = cloudinary;
 app.use("/", indexRoutes);
 app.use("/photos", photoRoutes);
 app.use("/photos/:id/comments", commentRoutes);
+app.use("/test", testRoutes)
 
 app.listen(3000 || process.env.PORT, process.env.IP, function(){
    console.log("The Keyclue Server Has Started!");

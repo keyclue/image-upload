@@ -28,15 +28,13 @@ cloudinary.config({
 //INDEX - show all photos
 router.get("/", function(req, res){
     // Get all photos from DB
-    console.log("Index GET")
     photo.find({}, function(err, allphotos){
        if(err){
            console.log(err);
        } else {
-           console.log("Finding photos")
-           request('', function (error, response, body) {
+           request('http://google.com', function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                console.log(body); // Show the HTML for the Modulus homepage.
+//                console.log(body); // Show the HTML for the Modulus homepage.
                 res.render("photos/index",{photos:allphotos});
 
             }
