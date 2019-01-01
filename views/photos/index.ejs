@@ -2,25 +2,26 @@
 
      <header class="jumbotron">
          <div class="container">
-             <h1><span class="glyphicon glyphicon-tent"></span> Welcome To YelpCamp!</h1>
-             <p>View our hand-picked campgrounds from all over the world</p>
+             <h1><span class="glyphicon glyphicon-camera"></span> AI Photo Editor!</h1>
+             <p>Edit photos optimal for your store use</p>
              <p>
-                <a class="btn btn-primary btn-lg" href="/campgrounds/new">Add New Campground</a>
+                <a class="btn btn-primary btn-lg" href="/photos/new">Add New Photos</a>
              </p>
          </div>
      </header>
      
      <div class="row text-center" style="display:flex; flex-wrap: wrap;">
-        <% campgrounds.forEach(function(campground){ %>
+        <% photos.forEach(function(photo){ %>
             <div class="col-md-3 col-sm-6">
                 <div class="thumbnail">
-                   <img src="<%= campground.image %>">
+                   <img src="<%= photo.image %>">
                    <div class="caption">
-                       <h4><%= campground.name %></h4>
+                       <h4><%= photo.name %></h4>
                    </div>
                    <p>
-                       <a href="/campgrounds/<%= campground._id %>" class="btn btn-primary">More Info</a>
+                       <a href="/photos/<%= photo._id %>" class="btn btn-primary">Edit Photo</a>
                    </p>
+                   <% console.log(photo) %>
                 </div>
             </div>
         <% }); %>

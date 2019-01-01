@@ -1,4 +1,4 @@
-require('dotenv').config()
+var dotenv = require('dotenv').config()
 
 var express     = require("express"),
     app         = express(),
@@ -8,7 +8,7 @@ var express     = require("express"),
     cookieParser = require("cookie-parser"),
     LocalStrategy = require("passport-local"),
     flash        = require("connect-flash"),
-    Campground  = require("./models/campground"),
+    photo  = require("./models/photo"),
     Comment     = require("./models/comment"),
     User        = require("./models/user"),
     session = require("express-session"),
@@ -17,10 +17,10 @@ var express     = require("express"),
     
 //requiring routes
 var commentRoutes    = require("./routes/comments"),
-    campgroundRoutes = require("./routes/campgrounds"),
+    photoRoutes = require("./routes/photo_route"),
     indexRoutes      = require("./routes/index")
     
-mongoose.connect("mongodb://localhost/yelp_camp_v9");
+mongoose.connect("mongodb://localhost/keyclue_image");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -50,11 +50,19 @@ app.use(function(req, res, next){
    next();
 });
 
+var cloudinary = require('cloudinary');
+cloudinary.config({ 
+  cloud_name: 'keyclue', 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+app.locals.cloudinary = cloudinary;
 
 app.use("/", indexRoutes);
-app.use("/campgrounds", campgroundRoutes);
-app.use("/campgrounds/:id/comments", commentRoutes);
+app.use("/photos", photoRoutes);
+app.use("/photos/:id/comments", commentRoutes);
 
 app.listen(3000 || process.env.PORT, process.env.IP, function(){
-   console.log("The YelpCamp Server Has Started!");
+   console.log("The Keyclue Server Has Started!");
 });

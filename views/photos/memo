@@ -1,0 +1,2 @@
+                {overlay: "golden_star", gravity: "north_west", x: 10, y:10}
+                                {overlay: photo.imageId, gravity: 'north_west', x: 5, y: 5, opacity: 60 }
