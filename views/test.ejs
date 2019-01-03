@@ -1,16 +1,24 @@
-<% include ../partials/header %>
+<% include ./partials/header %>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center">Upload File</h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/test" method="post">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="filename" placeholder="File name">
+                </div>
 
-<div class="form-group">
-    <label for="my-input">Text</label>
-    <select id="my-input" class="custom-select">
-        <option>Text</option>
-    </select>
+                <div class="form-group">
+                    <input class="form-control" type="text" name="fileformat" placeholder="File format">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-lg btn-primary btn-block">Upload!</button>
+                </div>
+            </form>
+            <a href="/">Go Back</a>
+        </div>
+    </div>
 </div>
-<div class="form-group">
-    <label for="my-input">Text</label>
-    <input id="my-input" class="form-control" type="text">
-</div>
-<button class="btn btn-primary" type="button">Text</button>
 
-<% include ../partials/footer %>
+<% include ./partials/footer %>
