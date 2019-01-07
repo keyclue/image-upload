@@ -1,0 +1,43 @@
+<% include ../partials/header %>
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center">Input Username and Password</h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/api" method="post">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="username" placeholder="username">
+                </div>
+                <div class="form-group">
+                    <input class="form-control" type="password" name="password" placeholder="password">
+                </div>
+                <br>
+                <input type="text" name="dates">
+                <br>
+                <div class="in-input">
+                    <input  class="form-control " id="keyword" type="text" Placeholder="keyword" name="keyword" />
+                </div>
+                <br>
+                <div class="in-btn">
+                    <input class="btn btn-primary" type="submit" name="submit" value="주문 보기">
+                </div>
+                <br>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-block">Show!</button>
+                </div>
+            </form>
+            <br>
+            <a href="/api"><button class="btn btn-primary btn-block">Go Back</button></a>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script>
+    $('input[name="dates"]').daterangepicker({
+opens: 'left'
+}, function(start, end, label) {
+console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+});
+</script>
+<% include ../partials/footer %>

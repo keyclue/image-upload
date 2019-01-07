@@ -20,7 +20,7 @@ var commentRoutes    = require("./routes/comments"),
     photoRoutes = require("./routes/photos"),
     indexRoutes = require("./routes/index")
     
-mongoose.connect("mongodb://localhost/keyclue_image");
+mongoose.connect("mongodb://localhost/keyclue_image", { useNewUrlParser: true });
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
@@ -63,8 +63,8 @@ app.use("/", indexRoutes);
 app.use("/photos", photoRoutes);
 app.use("/photos/:id/comments", commentRoutes);
 
-var testRoutes = require("./routes/test");
-app.use("/test", testRoutes);
+var apiRoutes = require("./routes/api");
+app.use("/api", apiRoutes);
 
 app.listen(3000 || process.env.PORT, process.env.IP, function(){
    console.log("The Keyclue Server Has Started!");

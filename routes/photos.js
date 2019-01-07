@@ -16,7 +16,7 @@ var imageFilter = function (req, file, cb) {
     }
     cb(null, true);
 };
-var upload = multer({ storage: storage, fileFilter: imageFilter})
+var upload = multer({ storage: storage, fileFilter: imageFilter});
 
 var cloudinary = require('cloudinary');
 cloudinary.config({ 

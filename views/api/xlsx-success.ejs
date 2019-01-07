@@ -1,0 +1,15 @@
+<% include ../partials/header %>
+<div class="container">
+    <div style="width: 30%; margin: 25px auto;">
+        <div class="row">
+            <h1 style="text-align: center">Excel File Loaded</h1>
+            <br>
+            <h3>Filename: <%= filename %></h3>
+            <br>
+            <p><%=sheetname %></p>
+            <p>table: <%= data %></p>
+        </div>
+        <a href="/api/xlsx"><button class="btn btn-primary btn-block">Go Back</button></a>
+    </div>
+</div>
+<% include ../partials/footer %>
