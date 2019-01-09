@@ -2,16 +2,16 @@
     <div class="row">
         <h1 style="text-align: center">Upload Excel File</h1>
         <div style="width: 30%; margin: 25px auto;">
-            <form action="xlsx" method="POST" enctype="multipart/form-data">
+            <form action="xlsx" method="POST" enctype="multipart/form-data" >
                 <div class="form-group">
                     <input class="form-control" type="text" name="filename" placeholder="file name">
                 </div>
                 <div class="form-group">
                     <label for="Excel">Excel File</label>
-                    <input type="file" id="xlsx" name="file" accept="xlsx/*" required>
+                    <input type="file" id="xlsx" name="xlsx" required>
                 </div>
                 <div class="form-group">
-                    <input class="form-control" type="text" name="file[description]" placeholder="description">
+                    <input class="form-control" type="text" name="description" placeholder="description">
                 </div>
                 <div class="form-group">
                     <button class="btn btn-primary btn-block">Submit!</button>

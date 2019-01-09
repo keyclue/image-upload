@@ -5,9 +5,10 @@ var middleware = require("../middleware");
 var request = require("request");
 var multer = require('multer');
 var storage = multer.diskStorage({
-  filename: function(req, file, callback) {
-    callback(null, Date.now() + file.originalname);
-  }
+
+    filename: function(req, file, cb) {
+        cb(null, Date.now() + file.originalname);
+    }
 });
 var imageFilter = function (req, file, cb) {
     // accept image files only

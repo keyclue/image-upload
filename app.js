@@ -18,7 +18,8 @@ var express     = require("express"),
 //requiring routes
 var commentRoutes    = require("./routes/comments"),
     photoRoutes = require("./routes/photos"),
-    indexRoutes = require("./routes/index")
+    indexRoutes = require("./routes/index"),
+    tmallRoutes = require("./routes/tmall")
     
 mongoose.connect("mongodb://localhost/keyclue_image", { useNewUrlParser: true });
 app.use(bodyParser.urlencoded({extended: true}));
@@ -62,6 +63,7 @@ app.locals.cloudinary = cloudinary;
 app.use("/", indexRoutes);
 app.use("/photos", photoRoutes);
 app.use("/photos/:id/comments", commentRoutes);
+
 
 var apiRoutes = require("./routes/api");
 app.use("/api", apiRoutes);
