@@ -1,0 +1,26 @@
+<% include ../partials/header %>
+<div class="container">
+    <div class="row">
+        <h1 style="text-align: center">제품검색</h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="search" method="post">
+                <br>
+                <div class="form-group">
+                    <input  class="form-control " id="keyword" type="text" Placeholder="keyword" name="keyword" />
+                </div>
+                <br>
+                <div class="form-goup">
+                    <input class="btn btn-primary btn-block" type="submit" name="submit" value="입력">
+                </div>
+                <br>
+            </form>
+            <br><br>
+            <a href="/tmall/item"><button class="btn btn-primary btn-block">티몰 주문관리</button></a>
+            <br>
+            <a href="/tmall/item"><button class="btn btn-primary btn-block">티몰 제품관리</button></a>
+            <br>
+            <a href="/api"><button class="btn btn-primary btn-block">관리 홈</button></a>
+        </div>
+    </div>
+</div>
+<% include ../partials/footer %>

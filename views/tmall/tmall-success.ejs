@@ -4,10 +4,11 @@
         <div class="row">
             <h1 style="text-align: center">Now we have</h1>
             <br>
-            <h3>Dates: <%= data.dates %></h3>
+            <p>Orders</p>
+            <p> <%= JSON.stringify(Orders) %></p>
         </div>
         <br>
-        <a href="/api"><button class="btn btn-primary btn-block">Go Back</button></a>
+        <a href="/tmall"><button class="btn btn-primary btn-block">Go Back</button></a>
     </div>
 </div>
 <% include ../partials/footer %>

@@ -64,9 +64,11 @@ app.use("/", indexRoutes);
 app.use("/photos", photoRoutes);
 app.use("/photos/:id/comments", commentRoutes);
 
-
 var apiRoutes = require("./routes/api");
 app.use("/api", apiRoutes);
+var tmallRoutes = require("./routes/tmall");
+app.use("/tmall", tmallRoutes);
+
 
 app.listen(3000 || process.env.PORT, process.env.IP, function(){
    console.log("The Keyclue Server Has Started!");
