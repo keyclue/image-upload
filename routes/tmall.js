@@ -132,7 +132,7 @@ client.execute('taobao.products.search', {
 	else console.log(error);
 })
 })
-module.exports = router;
+
 
 router.get("/orders", function(req, res){
   res.render("tmall/tmall-orders");
@@ -154,10 +154,37 @@ router.post("/orders", function(req, res){
   }, function(error, response) {
       var orderInfo=[];
       if (!error) {
-        var table = tableify(response.trades.trade);
+        var Orders = response.trades.trade;
+        Orders.forEach(function(element){
+          if (element.status = 'WAIT_SELLER_SEND_GOODS'){
+            var temp = {
+              "주문자ID": element.buyer_nick,
+              "주문시각": element.created,
+              "수량": element.num,
+              "sku": element.orders.order.outer_sku_id,
+              "상품명": element.orders.order.title,
+              "결제시각": element.pay_time,
+              "결제액": element.payment,
+              "배송주소": element.receiver_address,
+              "시": element.receiver_city,
+              "구": element.receiver_district,
+              "주문자휴대폰": element.receiver_mobile,
+              "수신자명": element.receiver_name,
+              "성": element.receiver_state,
+              "우편번호": element.receiver_zip,
+              "점포명": element.title
+            };
+            orderInfo.push(temp);
+    //              var xls = json2xls(orderInfo, { fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰'] });
+    //              fs.writeFileSync('./output/orderinfo.xlsx', xls, 'binary');
+          }
+        });
+        var table = tableify(orderInfo);
         res.render("tmall/tmall-orders-success", {Orders: table});  
       }
       else
       console.log(error);
   });
 });
+
+module.exports = router;
