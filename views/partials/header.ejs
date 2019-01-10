@@ -16,9 +16,43 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="/"><b>KEYCLUE</b></a>
             </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                        <li><a href="/api">API</a></li>
+<!--            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span> -->
+            <div class="collapse navbar-collapse dropdown id="navbarNavDropdown">
+                <ul class="nav navbar-nav mr-auto navbar-right">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/photos" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        이미지관리
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/photos/new">이미지추가</a>
+                            <a class="dropdown-item" href="/photos/edit">이미지편집</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/photos/">이미지검색</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/tmall" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        티몰관리
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/tmall/orders">주문관리</a>
+                            <a class="dropdown-item" href="tmall/item">상품관리</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/tmall/search">상품검색</a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="/api" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        API관리
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="/api/xlsx">Xlsx</a>
+                            <a class="dropdown-item" href="/api/test">Test</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/api/dropzone">Dropzone</a>
+                        </div>
+                    </li>
                     <% if(!currentUser){ %>
                         <li><a href="/login">Login</a></li>
                         <li><a href="/register">Sign Up</a></li>

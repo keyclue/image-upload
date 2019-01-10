@@ -42,27 +42,10 @@ router.get("/", function(req, res){
 });
 
 router.post("/", function(req, res){
-
-    client.execute('taobao.trades.sold.get', {
-        'session':process.env.TMALL_SESSION,
-        'fields':'created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
-        'start_created':'2018-01-01 00:00:00',
-      //'end_created':'2019-12-31 23:59:59',
-        'status':'WAIT_SELLER_SEND_GOODS',
-        'type':'tmall_i18n',
-      //  'tag':'time_card',//
-      //  'page_no':'1',
-      //  'page_size':'40',
-      //  'use_has_next':'true'
-    }, function(error, response) {
-        var orderInfo=[];
         if (!error) {
-          var Orders = response.trades.trade;
-//          console.log(JSON.stringify(Orders));
-            res.render("tmall/tmall-success", {Orders: Orders});  
+            res.render("tmall/tmall-success");  
         }
         console.log(error);
-    });
 });
 
 router.get("/item", function(req, res){
@@ -145,9 +128,9 @@ router.post("/orders", function(req, res){
   client.execute('taobao.trades.sold.get', {
       'session':process.env.TMALL_SESSION,
       'fields':'created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
-      'start_created':'2018-01-01 00:00:00',
+      'start_created':'2019-01-09 00:00:00',
     //'end_created':'2019-12-31 23:59:59',
-      'status':'WAIT_SELLER_SEND_GOODS',
+    //  'status':'WAIT_SELLER_SEND_GOODS',
       'type':'tmall_i18n',
     //  'tag':'time_card',//
     //  'page_no':'1',
@@ -158,7 +141,7 @@ router.post("/orders", function(req, res){
       if (!error) {
         var Orders = response.trades.trade;
         Orders.forEach(function(element){
-          if (element.status = 'WAIT_SELLER_SEND_GOODS'){
+//          if (element.status = 'WAIT_SELLER_SEND_GOODS'){
             var temp = {
               "주문자ID": element.buyer_nick,
               "주문시각": element.created,
@@ -174,12 +157,13 @@ router.post("/orders", function(req, res){
               "수신자명": element.receiver_name,
               "성": element.receiver_state,
               "우편번호": element.receiver_zip,
-              "점포명": element.title
+              "점포명": element.title,
+              "상태": element.status
             };
             orderInfo.push(temp);
     //              var xls = json2xls(orderInfo, { fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰'] });
     //              fs.writeFileSync('./output/orderinfo.xlsx', xls, 'binary');
-          }
+//          }
         });
         var table = tableify(orderInfo);
         res.render("tmall/tmall-orders-success", {Orders: table});  
