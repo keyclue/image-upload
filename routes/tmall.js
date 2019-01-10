@@ -8,7 +8,7 @@ var fs = require("fs");
 var multer = require("multer");
 var tableify = require('tableify');
 var middleware = require("../middleware");
-
+var mongoose = require("mongoose");
 xlsxj = require("xlsx-2-json");
 var ApiClient = require('taobao-sdk').ApiClient;
 
@@ -17,7 +17,7 @@ const client = new ApiClient({
   'appsecret': process.env.TMALL_API_SECRET,
   'url':'http://gw.api.taobao.com/router/rest'
 });
-
+console.log(client.appkey);
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, '/tmp/keyclue-upload');
@@ -127,7 +127,7 @@ router.post("/orders", function(req, res){
 
   client.execute('taobao.trades.sold.get', {
       'session':process.env.TMALL_SESSION,
-      'fields':'created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
+      'fields':'buyer_nick,consign_time,seller_nick,created,title,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.order.outer_sku_id,payment,num,orders.order.title',
       'start_created':'2019-01-09 00:00:00',
     //'end_created':'2019-12-31 23:59:59',
     //  'status':'WAIT_SELLER_SEND_GOODS',
@@ -143,21 +143,24 @@ router.post("/orders", function(req, res){
         Orders.forEach(function(element){
 //          if (element.status = 'WAIT_SELLER_SEND_GOODS'){
             var temp = {
-              "주문자ID": element.buyer_nick,
-              "주문시각": element.created,
-              "수량": element.num,
-              "sku": element.orders.order.outer_sku_id,
-              "상품명": element.orders.order.title,
-              "결제시각": element.pay_time,
-              "결제액": element.payment,
-              "배송주소": element.receiver_address,
-              "시": element.receiver_city,
-              "구": element.receiver_district,
-              "주문자휴대폰": element.receiver_mobile,
-              "수신자명": element.receiver_name,
-              "성": element.receiver_state,
+              "주문날짜": element.consign_time,
+              "매장": element.seller_nick,
+              //"주문번호": element.buyer_nick,
+              "고객ID": element.buyer_nick,
+              "결제시간": element.pay_time,
+              "수취인": element.receiver_name,
+              "핸드폰번호": element.receiver_mobile,
               "우편번호": element.receiver_zip,
+              "배송주소": element.receiver_address,
+              //"시": element.receiver_city,
+              //"구": element.receiver_district,
+              "SKU": element.orders.order.outer_sku_id,
+              "상품명": element.orders.order.title,
+              "주문시각": element.created,
+              "결제액": element.payment,
+              "수량": element.num,
               "점포명": element.title,
+              //"점포명": element.has_buyer_message,
               "상태": element.status
             };
             orderInfo.push(temp);
@@ -165,6 +168,16 @@ router.post("/orders", function(req, res){
     //              fs.writeFileSync('./output/orderinfo.xlsx', xls, 'binary');
 //          }
         });
+        
+        mongoose.connect("mongodb://localhost:27017/tmall", { useNewUrlParser: true } ,function(err,db){
+          if(err){
+              console.log(err);
+          }else{
+          db.collection('tmall').insertMany(orderInfo);
+          db.close();
+          }
+        });
+
         var table = tableify(orderInfo);
         res.render("tmall/tmall-orders-success", {Orders: table});  
       }
@@ -172,5 +185,13 @@ router.post("/orders", function(req, res){
       console.log(error);
   });
 });
+
+router.get("/xlsx", function(req, res){
+  res.render("tmall/tmall-orders");
+});
+
+
+
+
 
 module.exports = router;
