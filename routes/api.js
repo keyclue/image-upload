@@ -64,6 +64,31 @@ router.post("/xlsx", middleware.isLoggedIn, upload.single('xlsx'), function(req,
     });
 });
 
+router.get('/upload', function(req, res){
+    res.render('api/upload');
+  });
+  
+router.post('/uploads', function (req, res) {
+    //console.log(req.files);
 
+    var files = req.files.file;
+    if (Array.isArray(files)) {
+        // response with multiple files (old form may send multiple files)
+        console.log("Got " + files.length + " files");
+    }
+    else {
+        // dropzone will send multiple requests per default
+        console.log("Got one file");
+    }
+    res.status(204);
+    res.send();
+});
+
+router.all('*', function(req, res, next){
+    fs.readFile('posts.json', function(err, data){
+      res.locals.posts = JSON.parse(data);
+      next();
+    });
+});
 
 module.exports = router;

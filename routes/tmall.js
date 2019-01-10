@@ -70,15 +70,17 @@ router.get("/item", function(req, res){
 });
 
 router.post("/item", function(req, res){
+  var qinput = req.body.keyword;
   client.execute('taobao.items.inventory.get', {
     'session' : process.env.TMALL_SESSION,
-    'q':'lartigent',
+    'q':qinput,
     'fields':'num_iid,title,price',
     'start_created': '2018-12-01 00:00:00'
   }, function(error, response) {
   if (!error ) {
     var Products = response.items.item;
     console.log(JSON.stringify(Products));
+    Products = tableify(Products);
     res.render("tmall/tmall-item-success", {Products: Products});  
   }
   else

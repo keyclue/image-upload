@@ -75,6 +75,11 @@ router.get("/new", middleware.isLoggedIn, function(req, res){
    res.render("photos/new"); 
 });
 
+//NEW - show form to create new photo drag and drop 
+router.get("/new-drop", middleware.isLoggedIn, function(req, res){
+    res.render("photos/new-drop"); 
+ });
+
 // SHOW - shows more info about one photo
 router.get("/:id", function(req, res){
     //find the photo with provided ID

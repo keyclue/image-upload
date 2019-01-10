@@ -1,13 +1,14 @@
 <% include ../partials/header %>
 <div class="container">
-    <div style="width: 30%; margin: 25px auto;">
+    <div style="width: 80%; margin: 25px auto;">
         <div class="row">
-            <h1 style="text-align: center">Now we have</h1>
+            <h1 style="text-align: center">제품 아이템 리스트</h1>
             <br>
-            <p>Orders</p>
-            <p> <%= JSON.stringify(Products) %></p>
+            <%- Products %>
         </div>
         <br>
+    </div>
+    <div style="width: 30%; margin: 25px auto;">
         <a href="/tmall"><button class="btn btn-primary btn-block">Go Back</button></a>
     </div>
 </div>
