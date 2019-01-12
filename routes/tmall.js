@@ -2,14 +2,15 @@ var express = require("express");
 var router  = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
-var xlsx = require('node-xlsx');
+var xlsx = require('xlsx'); 
 var request = require('request');
 var fs = require("fs");
 var multer = require("multer");
 var tableify = require('tableify');
 var middleware = require("../middleware");
+var json2xls =require("json2xls");
 
-xlsxj = require("xlsx-2-json");
+
 var ApiClient = require('taobao-sdk').ApiClient;
 
 const client = new ApiClient({
@@ -33,6 +34,13 @@ var xlsxFilter = function (req, file, cb) {
     }
     cb(null, true);
 };
+var imageFilter = function (req, file, cb) {
+  // accept image files only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+      return cb(new Error('Only image files are allowed!'), false);
+  }
+  cb(null, true);
+};
 
 var upload = multer({ storage: storage, fileFilter: xlsxFilter});
 
@@ -54,15 +62,16 @@ router.get("/item", function(req, res){
 
 router.post("/item", function(req, res){
   var qinput = req.body.keyword;
+
   client.execute('taobao.items.inventory.get', {
     'session' : process.env.TMALL_SESSION,
     'q':qinput,
-    'fields':'num_iid,title,price',
+    'fields':'approve_status,num_iid,title,nick,type,cid,pic_url,num,props,valid_thru, list_time,price,has_discount,has_invoice,has_warranty,has_showcase, modified,delist_time,postage_id,seller_cids,outer_id',
     'start_created': '2018-12-01 00:00:00'
   }, function(error, response) {
   if (!error ) {
     var Products = response.items.item;
-    console.log(JSON.stringify(Products));
+//    console.log(Products);
     Products = tableify(Products);
     res.render("tmall/tmall-item-success", {Products: Products});  
   }
@@ -80,7 +89,7 @@ client.execute('taobao.items.inventory.get', {
   'session' : process.env.TMALL_SESSION,
   'q':'lartigent',
   'fields':'num_iid,title,price',
-  'start_created': '2018-12-01 00:00:00'
+  'start_created': '2019-01-01 00:00:00'
 }, function(error, response) {
 if (!error ) {
   var Products = response.items.item;
@@ -127,7 +136,7 @@ router.post("/orders", function(req, res){
 
   client.execute('taobao.trades.sold.get', {
       'session':process.env.TMALL_SESSION,
-      'fields':'created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
+      'fields':'Tid,created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
       'start_created':'2019-01-09 00:00:00',
     //'end_created':'2019-12-31 23:59:59',
     //  'status':'WAIT_SELLER_SEND_GOODS',
@@ -141,7 +150,6 @@ router.post("/orders", function(req, res){
       if (!error) {
         var Orders = response.trades.trade;
         Orders.forEach(function(element){
-//          if (element.status = 'WAIT_SELLER_SEND_GOODS'){
             var temp = {
               "주문자ID": element.buyer_nick,
               "주문시각": element.created,
@@ -161,12 +169,18 @@ router.post("/orders", function(req, res){
               "상태": element.status
             };
             orderInfo.push(temp);
-    //              var xls = json2xls(orderInfo, { fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰'] });
-    //              fs.writeFileSync('./output/orderinfo.xlsx', xls, 'binary');
-//          }
         });
+//        console.log(JSON.stringify(orderInfo))
+        var xls = json2xls(orderInfo, { fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰'] });
         var table = tableify(orderInfo);
-        res.render("tmall/tmall-orders-success", {Orders: table});  
+        res.render("tmall/tmall-orders-success", {Orders: table});
+        xlsx.writeFile({
+          SheetNames: ['Sheet1'],
+          Sheets: {
+            Sheet1: orderInfo,
+          }
+        }, './outputs/orderinfo-1.xlsx');
+        console.log('xlsx  file written!') 
       }
       else
       console.log(error);
