@@ -69,6 +69,8 @@ app.use("/api", apiRoutes);
 var tmallRoutes = require("./routes/tmall");
 app.use("/tmall", tmallRoutes);
 
+var dropzoneRoutes = require("./routes/dropzone");
+app.use("/dropzone", dropzoneRoutes);
 
 app.listen(3000 || process.env.PORT, process.env.IP, function(){
    console.log("The Keyclue Server Has Started!");

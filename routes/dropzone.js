@@ -3,12 +3,27 @@ var fs = require('fs');
 var multer = require('multer');
 var bodyParser = require('body-parser');
 var router = express();
+var middleware = require("../middleware");
 
-router.use('/public', express.static(__dirname + '/public'));
-router.use(bodyParser.urlencoded({extended: true}));
-router.use(multer({dest: 'uploads'})); // dest is not necessary if you are hroutery with the default: /tmp
+var urlbodyparer = bodyParser.urlencoded({extended: true})
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      cb(null, '/tmp/keyclue-upload');
+  },
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
 
-router.locals.title = 'Extended Express Example';
+var imageFilter = function (req, file, cb) {
+  // accept image files only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+      return cb(new Error('Only image files are allowed!'), false);
+  }
+  cb(null, true);
+};
+
+var upload = multer({ storage: storage, fileFilter: imageFilter});
 
 router.all('*', function(req, res, next){
   fs.readFile('posts.json', function(err, data){
@@ -18,10 +33,10 @@ router.all('*', function(req, res, next){
 });
 
 router.get('/upload', function(req, res){
-  res.render('upload.ejs');
+  res.render('/api/upload.ejs');
 });
 
-router.post('/uploads', function (req, res) {
+router.post('/uploads', middleware.isLoggedIn, upload.single('image'), function (req, res) {
     //console.log(req.files);
 
     var files = req.files.file;
