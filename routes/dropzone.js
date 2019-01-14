@@ -25,13 +25,6 @@ var imageFilter = function (req, file, cb) {
 
 var upload = multer({ storage: storage, fileFilter: imageFilter});
 
-router.all('*', function(req, res, next){
-  fs.readFile('posts.json', function(err, data){
-    res.locals.posts = JSON.parse(data);
-    next();
-  });
-});
-
 router.get('/upload', function(req, res){
   res.render('/api/upload.ejs');
 });

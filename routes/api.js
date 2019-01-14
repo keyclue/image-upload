@@ -84,11 +84,9 @@ router.post('/uploads', function (req, res) {
     res.send();
 });
 
-router.all('*', function(req, res, next){
-    fs.readFile('posts.json', function(err, data){
-      res.locals.posts = JSON.parse(data);
-      next();
-    });
-});
+router.get('/modify', function(req, res){
+    res.render('api/modify');
+  });
+
 
 module.exports = router;

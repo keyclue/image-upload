@@ -23,10 +23,10 @@ a { text-decoration: none }
 <script type="text/javascript" src="//unpkg.com/file-saver@1.3.3/FileSaver.js"></script>
 <![endif]>
 
-<script src="spin.js"></script>
+<script src="/scripts/spin.js"></script>
 
-<script src="alertify.js"></script>
-<link rel="stylesheet" media="screen" href="alertify.css">
+<script src="/scripts/alertify.js"></script>
+<link rel="stylesheet" href="/stylesheets/alertify.css"/>
 
 <!--[if lte IE 9]>
 <script type="text/javascript" src="shim.min.js"></script>
@@ -65,17 +65,12 @@ making changes, you can generate a new file with the table contents.
       +---------------------------------------------------------+
 </div>
 
-Need a file? <a href="https://obamawhitehouse.archives.gov/sites/default/files/omb/budget/fy2014/assets/receipts.xls">OMB FY 2014 Federal Receipts</a>
-
 <b>Editable Data Table:</b> (click a cell to edit it)
 </pre>
 <table id="data-table">
-  <tr><td contenteditable="true" colspan="4">Some merged cell</td></tr>
-  <tr><td contenteditable="true">This</td><td contenteditable="true">is</td><td contenteditable="true">a</td><td contenteditable="true">Test</td></tr>
-  <tr><td contenteditable="true">Fee</td><td contenteditable="true">Fi</td><td contenteditable="true">Fo</td><td contenteditable="true">Fum</td></tr>
-  <tr><td contenteditable="true">Foo</td><td contenteditable="true"></td><td contenteditable="true">Bar</td><td contenteditable="true"></td></tr>
-  <tr><td contenteditable="true"></td><td contenteditable="true">Baz</td><td contenteditable="true">&#x2603;</td><td contenteditable="true">Qux</td></tr>
-  <tr><td contenteditable="true">1</td><td contenteditable="true">2</td><td contenteditable="true">3</td><td contenteditable="true">4</td></tr>
+  <tr><td contenteditable="true" colspan="4">Imported File Template</td></tr>
+  <tr><td contenteditable="true">This</td><td contenteditable="true">is</td><td contenteditable="true">a</td><td contenteditable="true">Template</td></tr>
+  <tr><td contenteditable="true">It</td><td contenteditable="true">will</td><td contenteditable="true">be</td><td contenteditable="true">replaced</td></tr>
 </table>
 <br />
 <pre><b>Export it!</b></pre>
@@ -93,7 +88,7 @@ Need a file? <a href="https://obamawhitehouse.archives.gov/sites/default/files/o
 	<p id="csvbtn" class="btn">Flash required for actually downloading the generated file.</p>
 </td></tr>
 </table>
-<pre><b>Powered by the <a href="//sheetjs.com/opensource">community version of js-xlsx</a></b>
+<pre><b>Powered by the <a href="https://sheetjs.com/opensource">community version of js-xlsx</a></b>
 
 <b>Compatibility notes:</b>
 - Editable table leverages the HTML5 contenteditable feature, supported in most browsers.
@@ -141,7 +136,7 @@ var spinner;
 function xw(data, cb) {
   pending = true;
   spinner = new Spinner().spin(drop);
-  var worker = new Worker('./modify.js');
+  var worker = new Worker('/scripts/modify.js');
   worker.onmessage = function(e) {
     switch(e.data.t) {
       case 'ready': break;
