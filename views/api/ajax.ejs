@@ -1,0 +1,32 @@
+<% include ../partials/header %>
+
+       Data: <div id=data1>
+        <%= data %>
+       </div>
+       <br>
+       <input type="button" id="enter" value="Enter">
+       <br>
+
+    response here: <p id="lblResponse">fill me in</p>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $.ajax({
+        url: '/api/ajax/',
+        // dataType: "jsonp",
+        data: '{"data": "TEST"}',
+        type: 'POST',
+        jsonpCallback: 'callback', // this is not relevant to the POST anymore
+        success: function (data) {
+            var ret = jQuery.parseJSON(data);
+            $('#lblResponse').html(ret.msg);
+            console.log('Success: ')
+        },
+        error: function (xhr, status, error) {
+            console.log('Error: ' + error.message);
+            $('#lblResponse').html('Error connecting to the server.');
+        },
+    });
+});
+</script>
+<% include ../partials/footer %>

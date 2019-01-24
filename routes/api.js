@@ -40,8 +40,18 @@ router.get("/test", function(req, res){
     res.render("api/test");
 });
 
+
 router.post("/test", function(req, res){
-    res.render("api/test-success", {data: req.body});
+    res.render("api/test-success", {data: data});
+});
+
+var data = {field1: 1, field2: 2};
+router.get("/ajax", function(req, res){
+    res.render("api/ajax", {data: data});
+});
+
+router.post("/ajax", function(req, res){
+    res.render("api/ajax", {data: req.body});
 });
 
 router.get("/xlsx", middleware.isLoggedIn, function(req, res){
