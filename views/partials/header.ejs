@@ -3,75 +3,66 @@
 <head>
     <title>KEYCLUE</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="/stylesheets/main.css">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.13.1/bootstrap-table.min.js"></script>
-    <script src="/scripts/shim.min.js"></script>
-    <script src="/scripts/xlsx.full.min.js"></script>
-    <script src="/scripts/spin.js"></script>
-    <script src="/scripts/alertify.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="/stylesheets/main.css">
     <link rel="stylesheet" href="/stylesheets/alertify.css"/>
 </head>
 <body>
-<nav class="navbar navbar-default">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/"><b>KEYCLUE</b></a>
-        </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="active dropdown">
-                    <a href="/photos" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">이미지관리 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/photos/new">이미지추가</a></li>
-                        <li><a href="/photos/edit">이미지편집</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">link</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#">Link</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="/tmall" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">티몰관리 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/tmall/orders">주문관리</a></li>
-                        <li><a href="/tmall/item">상품관리</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="/tmall/search">상품검색</a></li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="/api" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API 관리 <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/api/xlsx">Xlsx</a></li>
-                        <li><a href="/api/test">Test</a></li>
-                        <li><a href="/api/ajax">Ajax</a></li
-                        <li role="separator" class="divider"></li>
-                        <li><a href="/dropzone/upload">Dropzone</a></li>
-                        <li><a href="/api/modify">modify</a></li>
+<nav class="navbar navbar-expand-sm navbar-light bg-light">
+    <a class="navbar-brand" href="/"><b>KEYCLUE</b></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+      
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                사진관리
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/photos">사진목록</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/photos/new">사진추가</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                상품관리
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/api/">API</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/api/xlsx">Xlsx</a>
+                    <a class="dropdown-item" href="/api/ajax">Ajax</a>
+                    <a class="dropdown-item" href="/api/modify">Modify</a>
+                    <a class="dropdown-item" href="/dropzone/upload">Dropzone</a> 
+                    <a class="dropdown-item" href="/api/test">Test</a>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                티몰관리
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/tmall">Tmall관리</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/tmall/orders">주문관리</a>
+                    <a class="dropdown-item" href="/tmall/item">상품관리</a>
 
-                    </ul>
-                </li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">                    
-                <% if(!currentUser){ %>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Sign Up</a></li>
-                <% } else { %>
-                    <li><a href="#">Signed In As <%= currentUser.username %></a></li>
-                    <li><a href="/logout">Logout</a></li>
-                <% } %>
-            </ul>
-        </div>
+                    <a class="dropdown-item" href="/tmall//search">상품검색</a>
+                </div>
+            </li>
+        </ul>
+        <ul class="navbar-nav nav-light bg-light navbar-right">                    
+            <% if(!currentUser){ %>
+                <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" href="/register">Sign Up</a></li>
+            <% } else { %>
+                <li class="nav-item"><a class="nav-link" href="#">Signed In As <%= currentUser.username %></a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+            <% } %>
+        </ul>
     </div>
 </nav>
 

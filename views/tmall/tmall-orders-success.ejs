@@ -1,22 +1,23 @@
 <% include ../partials/header %>
 <div class="container">
     <div style="width: 100%; margin: 25px auto;">
-        <div class="row">
-            <h1 style="text-align: center">티몰 주문리스트</h1>
-            <%- table %>
+        <div class="jumbotron">
+            <h1 style="text-align: center">티몰 주문 리스트</h1>
+        </div>
+        </div>
+            <%- Orders %>
         </div>
     </div>
     <div style="width: 30%; margin: 25px auto;">
-        <br><br>
-        <a href="/tmall/orders"><button class="btn btn-primary btn-block">다른 티몰오더보기</button></a>
+        <a href="/tmall/orders"><button class="btn btn-outline-secondary btn-block">다른 티몰오더보기</button></a>
         <br>
-        <a href="/tmall/item"><button class="btn btn-primary btn-block">티몰 제품관리</button></a>
+        <a href="/tmall/item"><button class="btn btn-outline-secondary btn-block">티몰 제품관리</button></a>
         <br>
-        <a href="/tmall/search"><button class="btn btn-primary btn-block">티몰 제품검색</button></a>
+        <a href="/tmall/search"><button class="btn btn-outline-secondary btn-block">티몰 제품검색</button></a>
         <br>
-        <a href="/tmall/search"><button class="btn btn-primary btn-block">티몰 홈</button></a>
+        <a href="/tmall/search"><button class="btn btn-outline-secondary btn-block">티몰 홈</button></a>
         <br>
-        <a href="/api"><button class="btn btn-primary btn-block">관리 홈</button></a>
+        <a href="/api"><button class="btn btn-outline-secondary btn-block">관리 홈</button></a>
     </div>
 </div>
 <% include ../partials/footer %>

@@ -1,23 +1,26 @@
 <% include ../partials/header %>
-    <div class="row">
-        <h1 style="text-align: center">Create a New photo</h1>
-        <div style="width: 30%; margin: 25px auto;">
-            <form action="/photos" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                    <input class="form-control" type="text" name="photo[name]" placeholder="name">
-                </div>
-                <div class="form-group">
-                    <label for="image">Image</label>
-                    <input type="file" id="image" name="image" accept="image/*" required>
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="photo[description]" placeholder="description">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
-                </div>
-            </form>
-            <a href="/photos">Go Back</a>
-        </div>
+<div class="container">
+    <div class="jumbotron">
+        <h1 style="text-align: center">Add a New photo</h1>
     </div>
+    <div style="width: 30%; margin: 25px auto;">
+        <form action="/photos" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <input class="form-control" type="text" name="photo[name]" placeholder="name">
+            </div>
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" id="image" name="image" accept="image/*" required>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="photo[description]" placeholder="description">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-lg btn-outline-secondary btn-block">Submit!</button>
+            </div>
+        </form>
+        <a href="/photos">Go Back</a>
+    </div>
+</div>
+<% include ../partials/scripts %>
 <% include ../partials/footer %>

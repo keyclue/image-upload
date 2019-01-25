@@ -5,7 +5,7 @@
              <h1><span class="glyphicon glyphicon-camera"></span> AI Photo Editor!</h1>
              <p>Edit photos optimal for your store use</p>
              <p>
-                <a class="btn btn-primary btn-lg" href="/photos/new">Add New Photos</a>
+                <a class="btn btn-outline-secondary btn-lg" href="/photos/new">Add New Photos</a>
              </p>
          </div>
      </header>
@@ -19,7 +19,7 @@
                        <h4><%= photo.name %></h4>
                    </div>
                    <p>
-                       <a href="/photos/<%= photo._id %>" class="btn btn-primary">Edit Photo</a>
+                       <a href="/photos/<%= photo._id %>" class="btn btn-outline-secondary">Edit Photo</a>
                    </p>
                    <% console.log(photo) %>
                 </div>
@@ -27,4 +27,5 @@
         <% }); %>
     </div>
 
+<% include ../partials/scripts %>
 <% include ../partials/footer %>

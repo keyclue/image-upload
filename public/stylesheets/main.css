@@ -1,18 +1,24 @@
 .thumbnail img {
-    width: 100%;
+	width: 100%;
 }
 
 .thumbnail {
-    padding: 0;
+	padding: 0;
 }
 
 .thumbnail .caption-full {
-    padding: 9px;
+	padding: 9px;
 }
 
 .xport {
-    display: inline;
-    text-align:center;
+	display: inline;
+	text-align: center;
 }
-a { text-decoration: none }
-#data-table, #data-table th, #data-table td { border: 1px solid black }
+a {
+	text-decoration: none;
+}
+#data-table,
+#data-table th,
+#data-table td {
+	border: 1px solid black;
+}

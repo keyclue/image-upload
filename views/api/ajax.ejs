@@ -1,32 +1,42 @@
 <% include ../partials/header %>
-
-       Data: <div id=data1>
-        <%= data %>
-       </div>
-       <br>
-       <input type="button" id="enter" value="Enter">
-       <br>
-
-    response here: <p id="lblResponse">fill me in</p>
-
+<div class="container">
+    <div class=jumbotron">
+        <h1 style="text-align: center">상품관리</h1>
+    </div>
+        <div style="width: 30%; margin: 25px auto;">
+<!--<form action="/api/ajax" method="post">
+        <div class="form-group">
+            <input class="form-control" type="text" name="username" placeholder="username">
+        </div>
+        <div id="target" class="form-goup">
+            <input class="btn btn-outline-secondary btn-block" type="submit" name="submit" value="submit">
+        </div>
+        <br>
+    </form> -->
+            <form id="form-test" role="form" action="/api/ajax" method="post">
+                <input type="text" name="username" placeholder="username" class="form-control" required>
+            </form>
+            <br>
+            <button id="user_submit" class="btn btn-outline-secondary btn-block" type="submit" name="submit" value="submit">Submit</button>
+            <br>
+            <a href="/api/xlsx"><button class="btn btn-outline-secondary btn-block">엑셀 업로드</button></a>
+            <br>
+            <a href="/api/modify"><button class="btn btn-outline-secondary btn-block">엑셀수정</button></a>
+            <br>
+            <a href="/api"><button class="btn btn-outline-secondary btn-block">Go Back</button></a>
+            <br>
+            response here: <p id="display_username"><%= username %></p>
+        </div>
+    </div>
+<% include ../partials/scripts %>
 <script type="text/javascript">
-$(document).ready(function() {
-    $.ajax({
-        url: '/api/ajax/',
-        // dataType: "jsonp",
-        data: '{"data": "TEST"}',
-        type: 'POST',
-        jsonpCallback: 'callback', // this is not relevant to the POST anymore
-        success: function (data) {
-            var ret = jQuery.parseJSON(data);
-            $('#lblResponse').html(ret.msg);
-            console.log('Success: ')
-        },
-        error: function (xhr, status, error) {
-            console.log('Error: ' + error.message);
-            $('#lblResponse').html('Error connecting to the server.');
-        },
-    });
+$(".btn").click(function(){
+    console.log('Button CLicked')
+   if($(".form-control").val() ){
+        $(".form-control").val("Input Username");
+        $("#form-test").submit();
+   }else
+        alert("Username is empty");
 });
 </script>
 <% include ../partials/footer %>

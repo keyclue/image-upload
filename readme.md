@@ -22,7 +22,7 @@ Video tutorial available [here](https://youtu.be/RHd4rP9U9SA)
                     <input class="form-control" type="text" name="photo[description]" placeholder="description">
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Submit!</button>
+                    <button class="btn btn-lg btn-outline-secondary btn-block">Submit!</button>
                 </div>
             </form>
             <a href="/photos">Go Back</a>

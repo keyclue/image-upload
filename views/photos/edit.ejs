@@ -1,6 +1,9 @@
 <% include ../partials/header %>
     <div class="row">
-        <h1 style="text-align: center">Edit <%= photo.name %></h1>
+        <div class="jumbotron">
+                <h1 style="text-align: center">Edit <%= photo.name %></h1>
+        </div>
+        
         <div style="width: 30%; margin: 25px auto;">
             <form action="/photos/<%=photo._id%>?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
@@ -14,11 +17,12 @@
                     <input class="form-control" type="text" name="description" value="<%= photo.description %>">
                 </div>
                 <div class="form-group">
-                    <button class="btn btn-lg btn-primary btn-block">Update!</button>
+                    <button class="btn btn-lg btn-outline-secondary btn-block">Update!</button>
                 </div>
             </form>
             <a href="/photos">Go Back</a>
         </div>
     </div>
+<% include ../partials/scripts %>
 <% include ../partials/footer %>
 

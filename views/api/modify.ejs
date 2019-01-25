@@ -1,14 +1,10 @@
 <% include ../partials/header %>
-<pre>
-<div id="drop">
-
-
-             <b>Drop a spreadsheet file here to change table data</b>    
-
-
-
+<br>
+<h1>Drag and Drop Uploader</h1>
+<div class="jumbotron" id="drop">
+<h5 style="text-align: center">Drop a spreadsheet file here to change table data</H3>
 </div>
-</pre>
+<div class="justify-content-md-center">
 <pre>
 <table id="data-table">
   <tr><td contenteditable="true" colspan="4">Imported File Template</td></tr>
@@ -16,15 +12,26 @@
   <tr><td contenteditable="true">It</td><td contenteditable="true">will</td><td contenteditable="true">be</td><td contenteditable="true">replaced</td></tr>
 </table>
 </pre>
-<br />
-
-	<p id="xportxlsx" class="xport"><input type="submit" value="Export to XLSX!" onclick="doit('xlsx');"></p>
-	<p id="xlsxbtn" class="btn">Flash required for actually downloading the generated file.</p>
-	<p id="xportxlsb" class="xport"><input type="submit" value="Export to XLSB!" onclick="doit('xlsb');"></p>
-	<p id="xlsbbtn" class="btn">Flash required for actually downloading the generated file.</p>
-	<p id="xportcsv" class="xport"><input type="submit" value="Export to CSV!" onclick="doit('csv');"></p>
-	<p id="csvbtn" class="btn">Flash required for actually downloading the generated file.</p>
+</div>
+<br/>
+<div class="container">
+	<div class="row justify-content-md-center">
+		<div class="form-goup" id="xportxlsx">
+			<input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to XLSX!" onclick="doit('xlsx');">
+		</div>
+		<p id="xlsxbtn" class="btn">Flash required for actually downloading the generated file.</p>
+		<div class="form-goup" id="xportcsv">
+			<input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to XLSB!" onclick="doit('xlsb');">
+		</div>
+		<p id="xlsbbtn" class="btn">Flash required for actually downloading the generated file.</p>
+		<div class="form-goup" id="xportcsv">
+				<input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to CSV!" onclick="doit('csv');">
+		</div>
+		<p id="csvbtn" class="btn">Flash required for actually downloading the generated file.</p>
+	</div>
+</div>
 
 
 <script type="text/javascript" src="/scripts/xlsx-util.js"></script>
+<% include ../partials/scripts %>
 <% include ../partials/footer %>
