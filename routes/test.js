@@ -1,6 +1,6 @@
 options = {{api_name: 'taobao.items.inventory.get'},
 {fields: {
-    'session' : process.env.TMALL_SESSION,
+    'session' : btn-outline-secondary.TMALL_SESSION,
     'q':qinput,
     'fields':'num_iid, title, list_time',
 //    'page_no':'10',
