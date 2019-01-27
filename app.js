@@ -74,6 +74,7 @@ app.use('/tmall', tmallRoutes);
 var dropzoneRoutes = require('./routes/dropzone');
 app.use('/dropzone', dropzoneRoutes);
 
-app.listen(3000 || process.env.PORT, process.env.IP, function () {
-	console.log('The Keyclue Server Has Started!');
+const port = process.env.PORT || 3000
+app.listen(port, process.env.IP, function () {
+	console.log('The Keyclue Server Has Started at Port ' + port + '!');
 });
