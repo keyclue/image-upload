@@ -46,7 +46,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
 	res.locals.currentUser = req.user;
 	res.locals.success = req.flash('success');
 	res.locals.error = req.flash('error');
@@ -74,6 +74,6 @@ app.use('/tmall', tmallRoutes);
 var dropzoneRoutes = require('./routes/dropzone');
 app.use('/dropzone', dropzoneRoutes);
 
-app.listen(3000 || process.env.PORT, process.env.IP, function() {
+app.listen(3000 || process.env.PORT, process.env.IP, function () {
 	console.log('The Keyclue Server Has Started!');
 });

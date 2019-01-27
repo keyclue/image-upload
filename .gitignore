@@ -3,3 +3,6 @@
 /a-samples
 /a-uploads
 /a-outputs
+.eslintrc
+.prettierrc
+user-settings.json

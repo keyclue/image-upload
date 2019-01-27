@@ -5,11 +5,11 @@ var middleware = require('../middleware');
 var request = require('request');
 var multer = require('multer');
 var storage = multer.diskStorage({
-	filename: function(req, file, cb) {
+	filename: function (req, file, cb) {
 		cb(null, Date.now() + file.originalname);
 	}
 });
-var imageFilter = function(req, file, cb) {
+var imageFilter = function (req, file, cb) {
 	// accept image files only
 	if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
 		return cb(new Error('Only image files are allowed!'), false);
@@ -26,13 +26,13 @@ cloudinary.config({
 });
 
 //INDEX - show all photos
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
 	// Get all photos from DB
-	photo.find({}, function(err, allphotos) {
+	photo.find({}, function (err, allphotos) {
 		if (err) {
 			console.log(err);
 		} else {
-			request('http://google.com', function(error, response, body) {
+			request('http://google.com', function (error, response, body) {
 				if (!error && response.statusCode == 200) {
 					// console.log(body); // Show the HTML for the Modulus homepage.
 					res.render('photos/index', { photos: allphotos });
@@ -43,8 +43,8 @@ router.get('/', function(req, res) {
 });
 
 //CREATE - add new photo to DB
-router.post('/', middleware.isLoggedIn, upload.single('image'), function(req, res) {
-	cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
+router.post('/', middleware.isLoggedIn, upload.single('image'), function (req, res) {
+	cloudinary.v2.uploader.upload(req.file.path, function (err, result) {
 		if (err) {
 			req.flash('error', err.message);
 			return res.redirect('back');
@@ -58,7 +58,7 @@ router.post('/', middleware.isLoggedIn, upload.single('image'), function(req, re
 			id: req.user._id,
 			username: req.user.username
 		};
-		photo.create(req.body.photo, function(err, photo) {
+		photo.create(req.body.photo, function (err, photo) {
 			if (err) {
 				req.flash('error', err.message);
 				return res.redirect('back');
@@ -69,7 +69,7 @@ router.post('/', middleware.isLoggedIn, upload.single('image'), function(req, re
 });
 
 //NEW - show form to create new photo
-router.get('/new', middleware.isLoggedIn, function(req, res) {
+router.get('/new', middleware.isLoggedIn, function (req, res) {
 	res.render('photos/new');
 });
 
@@ -79,9 +79,9 @@ router.get("/new-drop", middleware.isLoggedIn, function(req, res){
  });*/
 
 // SHOW - shows more info about one photo
-router.get('/:id', function(req, res) {
+router.get('/:id', function (req, res) {
 	//find the photo with provided ID
-	photo.findById(req.params.id).populate('comments').exec(function(err, foundphoto) {
+	photo.findById(req.params.id).populate('comments').exec(function (err, foundphoto) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -92,10 +92,10 @@ router.get('/:id', function(req, res) {
 	});
 });
 
-router.get('/:id/edit', middleware.checkUserphoto, function(req, res) {
+router.get('/:id/edit', middleware.checkUserphoto, function (req, res) {
 	console.log('IN EDIT!');
 	//find the photo with provided ID
-	photo.findById(req.params.id, function(err, foundphoto) {
+	photo.findById(req.params.id, function (err, foundphoto) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -105,8 +105,8 @@ router.get('/:id/edit', middleware.checkUserphoto, function(req, res) {
 	});
 });
 
-router.put('/:id', upload.single('image'), function(req, res) {
-	photo.findById(req.params.id, async function(err, photo) {
+router.put('/:id', upload.single('image'), function (req, res) {
+	photo.findById(req.params.id, async function (err, photo) {
 		if (err) {
 			req.flash('error', err.message);
 			res.redirect('back');
@@ -131,8 +131,8 @@ router.put('/:id', upload.single('image'), function(req, res) {
 	});
 });
 
-router.delete('/:id', function(req, res) {
-	photo.findById(req.params.id, async function(err, photo) {
+router.delete('/:id', function (req, res) {
+	photo.findById(req.params.id, async function (err, photo) {
 		if (err) {
 			req.flash('error', err.message);
 			return res.redirect('back');

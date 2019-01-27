@@ -128,7 +128,7 @@ router.post('/orders', function(req, res) {
 				'Tid,created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
 			start_created: '2019-01-09 00:00:00',
 			//'end_created':'2019-12-31 23:59:59',
-			//  'status':'WAIT_SELLER_SEND_GOODS',
+			status: 'WAIT_SELLER_SEND_GOODS',
 			type: 'tmall_i18n'
 			//  'tag':'time_card',//
 			//  'page_no':'1',
@@ -166,7 +166,7 @@ router.post('/orders', function(req, res) {
 				});
 				var table = tableify(orderInfo);
 				res.render('tmall/tmall-orders-success', { Orders: table });
-				xlsx.writeFile(
+				/*				xlsx.writeFile(
 					{
 						SheetNames: [ 'Sheet1' ],
 						Sheets: {
@@ -175,13 +175,13 @@ router.post('/orders', function(req, res) {
 					},
 					'./a-outputs/orderinfo-1.xlsx'
 				);
-				console.log('xlsx  file written!');
+				console.log('xlsx  file written!');*/
 			} else console.log(error);
 		}
 	);
 });
 
-let promisify = require('util').promisify;
+/*let promisify = require('util').promisify;
 
 let tmallAPI = function(error, tdata) {
 	api_name = tdata.api_name;
@@ -245,6 +245,6 @@ router.post('/orders1', function(req, res) {
 	var table = tableify(orderInfo);
 	console.log(orderInfo);
 	res.render('tmall/tmall-orders-success', { Orders: table });
-});
+});*/
 
 module.exports = router;
