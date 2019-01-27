@@ -19,21 +19,21 @@ const client = new ApiClient({
 });
 
 var storage = multer.diskStorage({
-	destination: function(req, file, cb) {
+	destination: function (req, file, cb) {
 		cb(null, '/tmp/keyclue-upload');
 	},
-	filename: function(req, file, callback) {
+	filename: function (req, file, callback) {
 		callback(null, Date.now() + file.originalname);
 	}
 });
-var xlsxFilter = function(req, file, cb) {
+var xlsxFilter = function (req, file, cb) {
 	// accept image files only
 	if (!file.originalname.match(/\.(xlsx|xls)$/i)) {
 		return cb(new Error('Only xlsx, xls files are allowed!'), false);
 	}
 	cb(null, true);
 };
-var imageFilter = function(req, file, cb) {
+var imageFilter = function (req, file, cb) {
 	// accept image files only
 	if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
 		return cb(new Error('Only image files are allowed!'), false);
@@ -44,52 +44,55 @@ var imageFilter = function(req, file, cb) {
 var upload = multer({ storage: storage, fileFilter: xlsxFilter });
 
 //tmall root route
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
 	res.render('tmall/tmall');
 });
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
 	if (!error) {
 		res.render('tmall/tmall-success');
 	}
 	console.log(error);
 });
 
-router.get('/item', function(req, res) {
+router.get('/item', function (req, res) {
 	res.render('tmall/tmall-item');
 });
 
-router.post('/item', function(req, res) {
+router.post('/item', function (req, res) {
 	var qinput = req.body.keyword;
 	client.execute(
 		'taobao.items.inventory.get',
 		{
 			session: process.env.TMALL_SESSION,
-			//    'q':qinput,
+			'q': qinput,
 			//    'seller_cids' : '1294459592',
-			banner: 'never_on_shelf',
+			//			banner: 'never_on_shelf',
 			page_no: '1',
 			page_size: '40',
 			fields: 'approve_status,num_iid,type,cid,num,list_time,price,modified,seller_cids,outer_id, title',
 			start_created: '2019-01-01 00:00:00',
 			start_modified: '2019-01-01 00:00:00'
 		},
-		function(error, response) {
+		function (error, response) {
 			if (!error) {
 				var Products = response.items.item;
 				console.log(Object.keys(Products).length);
 				Products = tableify(Products);
 				res.render('tmall/tmall-item-success', { Products: Products });
-			} else console.log('조건에 맞는 제품이 없습니다.', error);
+			} else {
+				res.render('tmall/tmall-item-success', { Products: '조건에 맞는 제품이 없습니다.' });
+			}
+
 		}
 	);
 });
 
-router.get('/search', function(req, res) {
+router.get('/search', function (req, res) {
 	res.render('tmall/tmall-search');
 });
 
-router.post('/search', function(req, res) {
+router.post('/search', function (req, res) {
 	console.log(req.body.keyword);
 	client.execute(
 		'taobao.products.search',
@@ -108,18 +111,18 @@ router.post('/search', function(req, res) {
 			barcode_str: '6924343550791,6901028180559',
 			market_id: '2'
 		},
-		function(error, response) {
+		function (error, response) {
 			if (!error) console.log(response);
 			else console.log(error);
 		}
 	);
 });
 
-router.get('/orders', function(req, res) {
+router.get('/orders', function (req, res) {
 	res.render('tmall/tmall-orders');
 });
 
-router.post('/orders', function(req, res) {
+router.post('/orders', function (req, res) {
 	client.execute(
 		'taobao.trades.sold.get',
 		{
@@ -135,11 +138,11 @@ router.post('/orders', function(req, res) {
 			//  'page_size':'40',
 			//  'use_has_next':'true'
 		},
-		function(error, response) {
+		function (error, response) {
 			var orderInfo = [];
 			if (!error) {
 				var Orders = response.trades.trade;
-				Orders.forEach(function(element) {
+				Orders.forEach(function (element) {
 					var temp = {
 						주문자ID: element.buyer_nick,
 						주문시각: element.created,
@@ -162,7 +165,7 @@ router.post('/orders', function(req, res) {
 				});
 				//        console.log(JSON.stringify(orderInfo))
 				var xls = json2xls(orderInfo, {
-					fields: [ '주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰' ]
+					fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰']
 				});
 				var table = tableify(orderInfo);
 				res.render('tmall/tmall-orders-success', { Orders: table });
