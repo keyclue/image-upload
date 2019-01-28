@@ -148,42 +148,42 @@ router.post("/orders", function(req, res){
   var date_end = date_Split[1].split('/');
   var date_endReplace = date_end[2] + '-' + date_end[0] + '-' + date_end[1];
   console.log(date_endReplace);
-  
+  // datepicker 포맷을 타오바오 날짜 형식으로 변경
   
   client.execute('taobao.trades.sold.get', {
     'session': process.env.TMALL_SESSION,
     'fields': 'num_iid,receiver_state,title,orders.oid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,num,has_buyer_message,seller_flag',
-    'start_created': date_startReplace,
-    'end_created' : date_endReplace,
+    'start_created': date_startReplace, // datepicker start
+    'end_created' : date_endReplace, //datepicker end
   'type': 'tmall_i18n',
   }, function (error, response) {
     if (!error) {
       var Orders = response.trades.trade;
       Orders.forEach(function (element) {
-        client.execute('taobao.item.seller.get', {
+        client.execute('taobao.item.seller.get', { //product_id 가져오기
           'session': process.env.TMALL_SESSION,
           'fields': 'product_id',
           'num_iid': element.num_iid
         }, function (error, response) {
           if (!error) {
             client.execute('taobao.product.get', {
-              'session': process.env.TMALL_SESSION,
+              'session': process.env.TMALL_SESSION, //브랜드명 가져오기
               'fields': 'props_str',
               'product_id': response.item.product_id
             }, function (error, response) {
               if (!error) {
                 var brand = response.product.props_str;
                // console.log(brand);
-                var split1 = brand.split(';');
+                var split1 = brand.split(';'); 
                 var split2 = split1[0].split(':', 2);
                 var split4 = new String("品牌");
                 var split5 = new String(split2);
-                if (split4.charAt(0) === split5.charAt(0)) {
+                if (split4.charAt(0) === split5.charAt(0)) { //브랜드명 추출
   
                     var splitInfo = [];
                     splitInfo.push(split2[1]);
                     //console.log(splitInfo);
-                    splitInfo.forEach(function (element2) {
+                    splitInfo.forEach(function (element2) { // 엑셀 데이터
                         var temp = {
                   
                             "주문날짜": element.pay_time,
@@ -248,11 +248,11 @@ router.post("/orders", function(req, res){
   
   
   
-                                var model = mongoXlsx.buildDynamicModel(arrData);
+                                var model = mongoXlsx.buildDynamicModel(arrData); //엑셀 쓰기
                                 mongoXlsx.mongoData2Xlsx(arrData, model, function (err, data) {
                                     console.log('File saved at:', data.fullPath);
 
-                                    mongoose.connect("mongodb://localhost:27017/api", { useNewUrlParser: true } ,function(err,db){
+                                    mongoose.connect("mongodb://localhost:27017/api", { useNewUrlParser: true } ,function(err,db){ // db 연결
                                       if(err){
                                         console.log(err);
                                       }else{
@@ -268,7 +268,7 @@ router.post("/orders", function(req, res){
                                   
                                 });
 
-                                console.log(arrData);
+                               // console.log(arrData);
 
                             } else console.log(error);
                         });
@@ -286,7 +286,7 @@ router.post("/orders", function(req, res){
   
 }else console.log(error);
   });
-  res.send('download!!');
+  res.send('download!!'); 
 });
 
 module.exports = router;
