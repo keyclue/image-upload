@@ -2,14 +2,16 @@ var express = require("express");
 var router  = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
-var xlsx = require('node-xlsx');
+var xlsx = require('xlsx'); 
 var request = require('request');
 var fs = require("fs");
 var multer = require("multer");
 var tableify = require('tableify');
 var middleware = require("../middleware");
+var json2xls =require("json2xls");
 var mongoose = require("mongoose");
-xlsxj = require("xlsx-2-json");
+var mongoXlsx = require('mongo-xlsx');
+
 var ApiClient = require('taobao-sdk').ApiClient;
 
 const client = new ApiClient({
@@ -17,7 +19,7 @@ const client = new ApiClient({
   'appsecret': process.env.TMALL_API_SECRET,
   'url':'http://gw.api.taobao.com/router/rest'
 });
-console.log(client.appkey);
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, '/tmp/keyclue-upload');
@@ -32,6 +34,13 @@ var xlsxFilter = function (req, file, cb) {
         return cb(new Error('Only xlsx, xls files are allowed!'), false);
     }
     cb(null, true);
+};
+var imageFilter = function (req, file, cb) {
+  // accept image files only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+      return cb(new Error('Only image files are allowed!'), false);
+  }
+  cb(null, true);
 };
 
 var upload = multer({ storage: storage, fileFilter: xlsxFilter});
@@ -54,15 +63,16 @@ router.get("/item", function(req, res){
 
 router.post("/item", function(req, res){
   var qinput = req.body.keyword;
+
   client.execute('taobao.items.inventory.get', {
     'session' : process.env.TMALL_SESSION,
     'q':qinput,
-    'fields':'num_iid,title,price',
+    'fields':'approve_status,num_iid,title,nick,type,cid,pic_url,num,props,valid_thru, list_time,price,has_discount,has_invoice,has_warranty,has_showcase, modified,delist_time,postage_id,seller_cids,outer_id',
     'start_created': '2018-12-01 00:00:00'
   }, function(error, response) {
   if (!error ) {
     var Products = response.items.item;
-    console.log(JSON.stringify(Products));
+//    console.log(Products);
     Products = tableify(Products);
     res.render("tmall/tmall-item-success", {Products: Products});  
   }
@@ -80,7 +90,7 @@ client.execute('taobao.items.inventory.get', {
   'session' : process.env.TMALL_SESSION,
   'q':'lartigent',
   'fields':'num_iid,title,price',
-  'start_created': '2018-12-01 00:00:00'
+  'start_created': '2019-01-01 00:00:00'
 }, function(error, response) {
 if (!error ) {
   var Products = response.items.item;
@@ -119,79 +129,164 @@ client.execute('taobao.products.search', {
 })
 
 
+var arrData = new Array();
+
+
 router.get("/orders", function(req, res){
   res.render("tmall/tmall-orders");
 });
 
 router.post("/orders", function(req, res){
 
+  var date = req.body.dates;
+
+  var date_Split = date.split(' - ');
+  var date_Start = date_Split[0].split('/');
+  
+  var date_startReplace = date_Start[2] + '-' + date_Start[0] + '-' + date_Start[1];
+  console.log(date_startReplace);
+  var date_end = date_Split[1].split('/');
+  var date_endReplace = date_end[2] + '-' + date_end[0] + '-' + date_end[1];
+  console.log(date_endReplace);
+  
+  
   client.execute('taobao.trades.sold.get', {
-      'session':process.env.TMALL_SESSION,
-      'fields':'buyer_nick,consign_time,seller_nick,created,title,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.order.outer_sku_id,payment,num,orders.order.title',
-      'start_created':'2019-01-09 00:00:00',
-    //'end_created':'2019-12-31 23:59:59',
-    //  'status':'WAIT_SELLER_SEND_GOODS',
-      'type':'tmall_i18n',
-    //  'tag':'time_card',//
-    //  'page_no':'1',
-    //  'page_size':'40',
-    //  'use_has_next':'true'
-  }, function(error, response) {
-      var orderInfo=[];
-      if (!error) {
-        var Orders = response.trades.trade;
-        Orders.forEach(function(element){
-//          if (element.status = 'WAIT_SELLER_SEND_GOODS'){
-            var temp = {
-              "주문날짜": element.consign_time,
-              "매장": element.seller_nick,
-              //"주문번호": element.buyer_nick,
-              "고객ID": element.buyer_nick,
-              "결제시간": element.pay_time,
-              "수취인": element.receiver_name,
-              "핸드폰번호": element.receiver_mobile,
-              "우편번호": element.receiver_zip,
-              "배송주소": element.receiver_address,
-              //"시": element.receiver_city,
-              //"구": element.receiver_district,
-              "SKU": element.orders.order.outer_sku_id,
-              "상품명": element.orders.order.title,
-              "주문시각": element.created,
-              "결제액": element.payment,
-              "수량": element.num,
-              "점포명": element.title,
-              //"점포명": element.has_buyer_message,
-              "상태": element.status
-            };
-            orderInfo.push(temp);
-    //              var xls = json2xls(orderInfo, { fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰'] });
-    //              fs.writeFileSync('./output/orderinfo.xlsx', xls, 'binary');
-//          }
-        });
-        
-        mongoose.connect("mongodb://localhost:27017/tmall", { useNewUrlParser: true } ,function(err,db){
-          if(err){
-              console.log(err);
-          }else{
-          db.collection('tmall').insertMany(orderInfo);
-          db.close();
-          }
-        });
+    'session': process.env.TMALL_SESSION,
+    'fields': 'num_iid,receiver_state,title,orders.oid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,num,has_buyer_message,seller_flag',
+    'start_created': date_startReplace,
+    'end_created' : date_endReplace,
+  'type': 'tmall_i18n',
+  }, function (error, response) {
+    if (!error) {
+      var Orders = response.trades.trade;
+      Orders.forEach(function (element) {
+        client.execute('taobao.item.seller.get', {
+          'session': process.env.TMALL_SESSION,
+          'fields': 'product_id',
+          'num_iid': element.num_iid
+        }, function (error, response) {
+          if (!error) {
+            client.execute('taobao.product.get', {
+              'session': process.env.TMALL_SESSION,
+              'fields': 'props_str',
+              'product_id': response.item.product_id
+            }, function (error, response) {
+              if (!error) {
+                var brand = response.product.props_str;
+               // console.log(brand);
+                var split1 = brand.split(';');
+                var split2 = split1[0].split(':', 2);
+                var split4 = new String("品牌");
+                var split5 = new String(split2);
+                if (split4.charAt(0) === split5.charAt(0)) {
+  
+                    var splitInfo = [];
+                    splitInfo.push(split2[1]);
+                    //console.log(splitInfo);
+                    splitInfo.forEach(function (element2) {
+                        var temp = {
+                  
+                            "주문날짜": element.pay_time,
+                            "매장": element.title,
+                            "주문번호": element.orders.order[0].oid,
+                            "고객ID": element.buyer_nick,
+                            "결제시간": element.pay_time,
+                            "수취인": element.receiver_name,
+                            "핸드폰번호": element.receiver_mobile,
+                            "우편번호": element.receiver_zip,
+                            "수취정보": element.receiver_state + element.receiver_city + element.receiver_district + element.receiver_address,
+                            "SKU": element.orders.order[0].outer_sku_id,
+                            "상품명": element.orders.order[0].title,
+                            "단가": element.payment,
+                            "USD 가격": element.payment / 7,
+                            "개수": element.num,
+                            "물류회사" : "",
+                            "송장번호" : "",
+                            "브랜드": element2,
+                            "댓글": element.has_buyer_message,
+                            "등록시간" : "",
+                            "발송시간" : "",
+                            "비고" : element.seller_flag
+                          }
+                        
+                        arrData.push(temp);
+                    });
+                }
+                else {
+                    var split3 = split1[1].split(':', 2);
+                    var splitInfo2 = [];
+                    splitInfo2.push(split3[1]);
+                    splitInfo2.forEach(function (element3) {
+                        var temp = {
+                          "주문날짜": element.pay_time,
+                          "매장": element.title,
+                          "주문번호": element.orders.order[0].oid,
+                          "고객ID": element.buyer_nick,
+                          "결제시간": element.pay_time,
+                          "수취인": element.receiver_name,
+                          "핸드폰번호": element.receiver_mobile,
+                          "우편번호": element.receiver_zip,
+                          "수취정보": element.receiver_state + element.receiver_city + element.receiver_district + element.receiver_address,
+                          "SKU": element.orders.order[0].outer_sku_id,
+                          "상품명": element.orders.order[0].title,
+                          "단가": element.payment,
+                          "USD 가격": element.payment / 7,
+                          "개수": element.num,
+                          "물류회사" : "",
+                          "송장번호" : "",
+                          "브랜드": element3,
+                          "댓글": element.has_buyer_message,
+                          "등록시간" : "",
+                          "발송시간" : "",
+                          "비고" : element.seller_flag
+                        };
+                        arrData.push(temp);
+  
+                    });
+                }
 
-        var table = tableify(orderInfo);
-        res.render("tmall/tmall-orders-success", {Orders: table});  
-      }
-      else
-      console.log(error);
+  
+  
+  
+                                var model = mongoXlsx.buildDynamicModel(arrData);
+                                mongoXlsx.mongoData2Xlsx(arrData, model, function (err, data) {
+                                    console.log('File saved at:', data.fullPath);
+
+                                    mongoose.connect("mongodb://localhost:27017/api", { useNewUrlParser: true } ,function(err,db){
+                                      if(err){
+                                        console.log(err);
+                                      }else{
+                                        //console.log(arrData);
+                                        try{
+                                          db.collection('api').insertMany(arrData);
+                                          //db.collection('testabc').insertOne(tempdata);
+                                        } 
+                                        catch(e){console.log(e);}
+                                        db.close();
+                                      }
+                                    });
+                                  
+                                });
+
+                                console.log(arrData);
+
+                            } else console.log(error);
+                        });
+                        
+                        
+                    }
+                    else console.log(error);
+            });
+  
+           
+   
   });
+   
+
+  
+}else console.log(error);
+  });
+  res.send('download!!');
 });
-
-router.get("/xlsx", function(req, res){
-  res.render("tmall/tmall-orders");
-});
-
-
-
-
 
 module.exports = router;
