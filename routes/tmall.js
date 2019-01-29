@@ -123,6 +123,10 @@ router.get('/orders', function (req, res) {
 });
 
 router.post('/orders', function (req, res) {
+	var qinput = req.body.keyword;
+	var Dates = req.body.dates;
+	var arr = Dates.split(" - ");
+	console.log(arr)
 	client.execute(
 		'taobao.trades.sold.get',
 		{
@@ -179,7 +183,7 @@ router.post('/orders', function (req, res) {
 					'./a-outputs/orderinfo-1.xlsx'
 				);
 				console.log('xlsx  file written!');*/
-			} else console.log(error);
+			} else console.log('No orders' + error);
 		}
 	);
 });

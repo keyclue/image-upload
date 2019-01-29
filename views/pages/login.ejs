@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    
+    <link href="files/home/styles.css" type="text/css" rel="stylesheet"/>
+	<link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+    <script src="resources/scripts/jquery-1.7.1.min.js"></script>
+   
+    
+  </head>
+  <body>
+	 <div class="container">
+            <div class="defult-login-page">
+                 <div id="" class="ax_default image">
+        <img id="" class="img " src="images/home/u1.png"/>
+      </div>
+	  		
+                <div class="defult-text">
+                    <p>글로벌 쇼핑몰 관리 시스템</p>
+                </div>
+				<% if(errors != ""){ %>
+				<div id="error" class="alert alert-danger"><%= errors %></div>
+			<% } %>
+                <form action="" method="post">
+                    <div class="def-form">
+                        <div class="user-def">
+                            <input class="form-control" name="email" type="text" placeholder="Email ID"/>
+                        </div>
+                        <div class="pass-def">
+                            <input class="form-control" name="password" type="password" placeholder="Password"/>
+
+                        </div>
+                         <input class="btn btn-primary" type="submit" value="Login" />
+                    </div>
+                </form>
+            </div>
+        </div>
+  </body>
+</html>
+

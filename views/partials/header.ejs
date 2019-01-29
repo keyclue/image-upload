@@ -1,79 +1,117 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ko" lang="ko">
+
 <head>
     <title>KEYCLUE</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+        crossorigin="anonymous">
     <link rel="stylesheet" href="/stylesheets/main.css">
-    <link rel="stylesheet" href="/stylesheets/alertify.css"/>
+    <link rel="stylesheet" href="/stylesheets/alertify.css" />
 </head>
-<body>
-<nav class="navbar navbar-expand-sm navbar-light bg-light">
-    <a class="navbar-brand" href="/"><b>KEYCLUE</b></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-      
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                사진관리
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="/photos">사진목록</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/photos/new">사진추가</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                상품관리
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/api/">API</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/api/xlsx">Xlsx</a>
-                    <a class="dropdown-item" href="/api/ajax">Ajax</a>
-                    <a class="dropdown-item" href="/api/modify">Modify</a>
-                    <a class="dropdown-item" href="/dropzone/upload">Dropzone</a> 
-                    <a class="dropdown-item" href="/api/test">Test</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                티몰관리
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="/tmall">Tmall관리</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="/tmall/orders">주문관리</a>
-                    <a class="dropdown-item" href="/tmall/item">상품관리</a>
 
-                    <a class="dropdown-item" href="/tmall//search">상품검색</a>
-                </div>
-            </li>
-        </ul>
-        <ul class="navbar-nav nav-light bg-light navbar-right">                    
-            <% if(!currentUser){ %>
+<body>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light">
+        <a class="navbar-brand" href="/"><b>KEYCLUE</b></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        사진관리
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/photos">사진목록</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/photos/new">사진추가</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        상품관리
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/api/">API</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/api/xlsx">Xlsx</a>
+                        <a class="dropdown-item" href="/api/ajax">Ajax</a>
+                        <a class="dropdown-item" href="/api/modify">Modify</a>
+                        <a class="dropdown-item" href="/dropzone/upload">Dropzone</a>
+                        <a class="dropdown-item" href="/api/test">Test</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        티몰관리
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/tmall">Tmall관리</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/tmall/orders">주문관리</a>
+                        <a class="dropdown-item" href="/tmall/item">상품관리</a>
+
+                        <a class="dropdown-item" href="/tmall//search">상품검색</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        Cafe24관리
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/cafe24/orders">주문관리</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">상품관리</a>
+                        <a class="dropdown-item" href="#">상품검색</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        브랜드관리
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/admin/brands">브랜드</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/admin/collections">컬렉션</a>
+                        <a class="dropdown-item" href="/cafe24//search"></a>
+                    </div>
+            </ul>
+            <ul class="navbar-nav nav-light bg-light navbar-right">
+                <% if(!currentUser){ %>
                 <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
                 <li class="nav-item"><a class="nav-link" href="/register">Sign Up</a></li>
-            <% } else { %>
-                <li class="nav-item"><a class="nav-link" href="#">Signed In As <%= currentUser.username %></a></li>
+                <% } else { %>
+                <li class="nav-item"><a class="nav-link" href="#">Signed In As
+                        <%= currentUser.username %></a></li>
                 <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
-            <% } %>
-        </ul>
-    </div>
-</nav>
+                <% } %>
+            </ul>
+        </div>
+    </nav>
 
-<div class="container">
-    <% if(error && error.length > 0) { %>
-        <div class="alert alert-danger"><p><%=error %></p></div>
-    <% } %>
-    
-    <% if(success && success.length > 0) { %>
-        <div class="alert alert-success"><p><%= success %></p></div>
-    <% } %>
-</div>
-<div class="container">
-       
+    <div class="container">
+        <% if(error && error.length > 0) { %>
+        <div class="alert alert-danger">
+            <p>
+                <%=error %>
+            </p>
+        </div>
+        <% } %>
+
+        <% if(success && success.length > 0) { %>
+        <div class="alert alert-success">
+            <p>
+                <%= success %>
+            </p>
+        </div>
+        <% } %>
+    </div>
+    <div class="container">

@@ -1,0 +1,24 @@
+<% include ../partials/header %>
+<div class="container">
+    <div style="width: 100%; margin: 25px auto;">
+        <div class="jumbotron">
+            <h1 style="text-align: center">Cafe24 주문 리스트</h1>
+        </div>
+    </div>
+    <%- Orders %>
+</div>
+</div>
+<div style="width: 30%; margin: 25px auto;">
+    <a href="/cafe24/orders"><button class="btn btn-outline-secondary btn-block">다른 티몰오더보기</button></a>
+    <br>
+    <a href="/cafe24/item"><button class="btn btn-outline-secondary btn-block">티몰 제품관리</button></a>
+    <br>
+    <a href="/cafe24/search"><button class="btn btn-outline-secondary btn-block">티몰 제품검색</button></a>
+    <br>
+    <a href="/cafe24/search"><button class="btn btn-outline-secondary btn-block">티몰 홈</button></a>
+    <br>
+    <a href="/api"><button class="btn btn-outline-secondary btn-block">관리 홈</button></a>
+</div>
+</div>
+<% include ../partials/scripts %>
+<% include ../partials/footer %>
