@@ -123,6 +123,10 @@ router.get('/orders', function (req, res) {
 });
 
 router.post('/orders', function (req, res) {
+	var qinput = req.body.keyword;
+	var Dates = req.body.dates;
+	var arr = Dates.split(" - ");
+	console.log(arr)
 	client.execute(
 		'taobao.trades.sold.get',
 		{
@@ -170,6 +174,7 @@ router.post('/orders', function (req, res) {
 				var table = tableify(orderInfo);
 				res.render('tmall/tmall-orders-success', { Orders: table });
 				/*				xlsx.writeFile(
+<<<<<<< HEAD
 				/*					{
 										SheetNames: ['Sheet1'],
 										Sheets: {

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<% include ../partials/header.ejs %>
+			<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+		</head>
+		<body>
+			<% include ../partials/nav.ejs %>
+			<style>	
+			.error {
+				margin: 0 auto;
+				width: 49%;
+				color: red;
+				text-align|:center;
+			}
+			#exapmle th{width:100px;}
+			.table {
+				width: 1800px !important;
+				max-width: 1800px !important;
+				margin-bottom: 20px;
+			}
+			</style>
+			<div class="radio-btn">
+				<input type="radio" name="r1" onclick="show(this.value);" value="g_sheet" checked />Google Sheet
+				<input type="radio" name="r1" onclick="show(this.value);"  value="csv"/>CSV
+			</div>
+			<% if(error != "" ){ %>
+				<div class="error"><%= error %></div>
+			<% } %>
+			<form id="g_sheet" action="" name="form" method="post">
+				<div class="col-lg-12">
+					<div class="in-input">
+						<input  class="form-control " type="hidden"  value="<%= brand_id %>" Placeholder="Paste your Spreadsheet ID here" name="sheet_url" />
+						<input  class=" " type="hidden"  value="<%= col_name %>"  name="col_name" />
+						<input  class=" " type="hidden"  value="sheet"  name="type" />
+					</div>
+					<div class="in-btn">
+						<input class="btn btn-primary" type="submit" name="submit" value="Sync from google sheet">
+					</div>
+				</div>
+			</form>
+			<form id="csv" style="display:none;" action="" name="form" method="post"   encType="multipart/form-data" >
+				<div class="col-lg-12">
+					<div class="in-input">
+						<input  class=" " type="file"  name="csvdata" />
+						<input  class=" " type="hidden"  value="csv"  name="type" />
+					</div>
+					<div class="in-btn">
+						<input class="btn btn-primary" type="submit" name="submit" value="sync">
+					</div>
+				</div>
+			</form>
+			<div class="container">
+				<% if(data != ""){ %>
+					<div class="scrool">
+						<table id = "example" class="table table-bordered">
+							<thead>
+								<tr>
+									<th style="width:100px !important;">
+										<select id="dropdown1" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "spu"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select> 
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown2" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "sku"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown3" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "barcode_number	"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown4" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "brand_name"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select> 
+									</th>
+									<th style="width:100px !important;" class=""> 
+										<select id="dropdown5" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "product_name"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown6" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "tag_price"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown7" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "sale_price"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown8" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "image"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown9" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "fabric"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;" >
+										<select id="dropdown10" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "hs_code"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown11" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "tmall"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select> 
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown12" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "tmall_0"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown13" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "tmall_1"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown14" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "tmall_2"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown15" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "tmall_3"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown16" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "made_in"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown17" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "weight_in_kg"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown18" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "how_to_wash"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown19" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "selling_point"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown20" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "product_price"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select> 
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown21" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "shipping_fee"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown22" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "total_price"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+									<th style="width:100px !important;">
+										<select id="dropdown23" style="width: 100%;">
+											<% options.forEach(function(r, index) { %>
+												<% var value = r.name; %>
+												<% value = value.replace(/ /g,"_"); %>
+												<% value = value.toLowerCase(); %>
+												<option value="<%= value %>" <% if(value == "total_price_1"){ %><%= "selected='selected'" %><% } %> ><%= r.name %></option>
+											<% }) %>
+												<option value="option_1_name">Option1 Name</option>
+												<option value="option_2_name">Option2 Name</option>
+												<option value="option_3_name">Option3 Name</option>
+												<option value="option_4_name">Option4 Name</option>
+												<option value="option_1_value">Option1 Value</option>
+												<option value="option_2_value">Option2 Value</option>
+												<option value="option_3_value">Option3 Value</option>
+												<option value="option_4_value">Option4 Value</option>
+										</select>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<% data.forEach(function(r, index) { %>
+										<% if(index > 23 && index % 23 == 0){ %>
+											</tr><tr>
+										<% } %>
+										<% if(index < 23){ %>
+
+										<% }else{ %>
+											<td><%= r.value %> </td>
+										<% } %>
+									<% }); %>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<form action="/save_record" method="post" id="save_data">
+						<input type="hidden" name="data" id="data" value="">
+						<input type="hidden" name="data_base"  value="<%= data_base %>">   
+						<input type="hidden" name="brand_id"  value="<%= brand_id %>">   
+						<input type="hidden" name="brand_name"  value="<%= brand_name %>">   
+						<a id="save" class="custom-btn btn btn-primary" href="javascript:void(0);">Save</a>
+					</form>
+				<% } %>
+			</div>
+			<script>
+				$(document).ready(function() {
+					$('table').SetEditable();
+					<!-- $('#example').dataTable();  -->
+					$("#save").click(function() {
+						var values = $('th > select option:selected').map(function() {
+							return this.value;
+						}).toArray();
+						var hasDups = !values.every(function(v,i) {
+							return values.indexOf(v) == i;
+						});
+						if (hasDups){
+							alert("Two or more column have same headings.Heading must be unique");
+						}else{
+							var mainArray =[];
+							var varientArray =[];
+							var d = new Date();
+							var month = d.getMonth()+1;
+							var day = d.getDate();
+							var lastProduct = "";
+							var pNameIndex = "";
+							var option_one_name = "";
+							var option_two_name = "";
+							var option_three_name = "";
+							var option_four_name = "";
+							var option_one_value = "";
+							var option_two_value = "";
+							var option_three_value = "";
+							var option_four_value = "";
+							var innerElement ="";
+							var currentTime = d.getFullYear() + '/' + (month<10 ? '0' : '') + month + '/' + (day<10 ? '0' : '') + day +" "+ d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+							$("table").find('tr').each(function (i, el) {
+							
+							
+								var $tds  = $(this).find('td');
+								var $ths  = $( "th > select option:selected" );
+								<!-- for(k=0;k<23;k++){  -->
+									<!-- if($ths.eq(k).val() == 'product_name'){ -->
+										<!-- pNameIndex = k; -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_1_name'){ -->
+										<!-- option_one_name = k; -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_2_name'){ -->
+										<!-- option_two_name = k; -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_3_name'){ -->
+										<!-- option_three_name = k; -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_4_name'){ -->
+										<!-- option_four_name = k; -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_1_value'){ -->
+										<!-- <!-- option_one_value = k; --> -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_2_value'){ -->
+										<!-- option_two_value = k; -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_3_value'){ -->
+										<!-- option_three_value = k; -->
+									<!-- } -->
+									<!-- if($ths.eq(k).val() == 'option_4_value'){ -->
+										<!-- option_four_value = k; -->
+									<!-- } -->
+										
+									<!-- innerElement[column] = value; -->
+								 <!-- } -->
+								 <!-- if(pNameIndex ==  ""){alert('Please select product Name Column'); return false;} -->
+								<!-- if( $tds.eq(pNameIndex).text().trim() == lastProduct){ -->
+								<!-- alert("yes"); -->
+								innerElement = {"created_date":currentTime, "modified_date":currentTime, "tmall_id": 0, "cafe_24" : 0, "shopify" : 0};
+									 <!-- if(option_one_name !=  ""){ -->
+										<!-- varientArray.push({"option_1" : $tds.eq(option_one_value).text().trim()}); -->
+									 <!-- } -->
+									 
+									/*   if(option_two_name !=  ""){
+										varientArray.push({$tds.eq(option_two_name).text().trim() : $tds.eq(option_two_value).text().trim()});
+									 }
+									 
+									  if(option_three_name !=  ""){
+										varientArray.push({$tds.eq(option_three_name).text().trim() : $tds.eq(option_three_value).text().trim()});
+									 }
+									 
+									  if(option_four_name !=  ""){
+										varientArray.push({$tds.eq(option_four_name).text().trim() : $tds.eq(option_four_value).text().trim()});
+									 }	*/
+									
+								<!-- }else{ -->
+								<!-- alert("no"); -->
+								<!-- innerElement['varients'] = varientArray; -->
+									varientArray = [];
+									for(k=0;k<23;k++){ 
+										column = $ths.eq(k).val();
+										value = $tds.eq(k).text().trim();
+										innerElement[column] = value;
+									 }
+									innerElement['image'] = '';
+									mainArray.push(innerElement);
+									<!-- lastProduct = $tds.eq(pNameIndex).text().trim(); -->
+								
+								<!-- } -->
+								 <!-- alert(JSON.stringify(mainArray));	 -->
+								 <!-- console.log(JSON.stringify(mainArray));	 -->
+							});
+							$('#data').val(JSON.stringify(mainArray));
+							 $('#save_data').submit();  
+						}
+					});
+					<!-- accountName = {"spu":"SPU", "sku":"SKU", "barcode_number":"BARCODE NUMBER", "brand":"BRAND", "product_name":"PRODUCT NAME", "tag_price":"TAG PRICE", "sale_price":"SALE PRICE", "image":"IMAGE", "fabric":"FABRIC", "hs_code":"HS CODE", "tmall":"(Tmall only)", "tmall_0":"(Tmall only)0", "tmall_1":"(Tmall only)1",	"tmall_2":"(Tmall only)2", "tmall_3":"(Tmall only)3",	"made_in":"MADE IN", "weight_in_kg":"WEIGHT(kg)", "how_to_wash":"HOW TO WASH",	"selling_point":"SELLING POINT (description)", "product_price":"PRODUCT PRICE",	"shipping_fee":"SHIPPING FEE",	"total_price":"TOTAL PRICE(U+V)", "total_price_1":"TOTAL PRICE(U+V)1","others":"Others"};    
+					<!-- var loop = $("th").length;   
+					/*for(var i =1;i< loop;i++){  
+						var selected = $("#dropdown"+i).val();
+						$("#dropdown"+i).empty();
+						$.each(accountName, function( key, value) {   
+							<!-- alert(key,value); -->
+							if(selected == value){ var select = 'selected';}else{ var select = '';}
+							$('#dropdown'+i).append($("<option "+ select+" ></option>")
+							.attr("value",key)
+							.text(value)); 
+						});
+					}	*/ --> -->
+				} );
+				function show(val){
+					if(val == "csv"){
+						$("#csv").show();
+						$("#g_sheet").hide();
+					}else{
+						$("#csv").hide();
+						$("#g_sheet").show();
+					}
+				}
+				$(document).ready(function(){
+					$('#csv').validate({
+						rules: {
+							csvdata: {
+								required: true,
+								extension: "csv"
+							}
+						},messages: {
+							csvdata: {
+								required :"Please select csv file.",
+								extension : "Please select csv file only."
+							}
+						},
+						submitHandler: function(form) {
+							form.submit();
+						}
+					});
+				});
+			</script>
+		</body>
+	</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<% include ../partials/header.ejs %>
+		</head>
+		<body>
+	<nav class="navbar navbar-default navbar-static-top navbar-inverse">
+  <div class="container">
+    <ul class="nav navbar-nav">
+     
+      <li class="">
+        <a href="/brands"><span class="glyphicon glyphicon-brand"></span> Brands</a>
+      </li> 
+	   <li class="">
+        <a href="Javascript:void(0);"><span class="glyphicon glyphicon-table"></span> Collections</a>
+      </li> 
+	   <li class="active">
+        <a href="Javascript:void(0);"><span class="glyphicon glyphicon-brnad"></span> Product</a>
+      </li> 
+	
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li class="navbar-right">
+        <a href="/logout"><span class="glyphicon glyphicon-logout"></span> Logout</a>
+      </li>
+	 <li class="navbar-right">
+        <a href="/manage-options"><span class="glyphicon glyphicon-logout"></span>Manage Options</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+		 <div id="u4" class="ax_default heading_1">
+        
+        <div id="u4_text" class="text ">
+          <p><span>Product View: Collection Name</span></p>
+        </div>
+      </div>
+	  <div class="left-sec">
+		<div class="search"><input type="text" id="myInput" class="form-control" placeholder="Search"></div>
+		<div class="uncheck"><a onclick="return checkUncheckAll();" class="btn btn-primary" href="javascript:void(0);" >Check/Uncheck All</a><input type="hidden" name="checkAll" id="checkAll"/></div>
+	  </div>
+			<form id="create_collection" action="/" name="form" method="post">
+				<div class="col-lg-12 input-upload-text">
+				<div class="upload-input">
+					<input  class="btn btn-primary" onclick="return uploadValidation()"  type="submit" name="upload" value="Upload Checked to"/>
+				</div>
+				<input type="hidden" name="product_sku" id="product_sku" value="" />
+				<input type="hidden" name="col_name" id="" value="<%= col_name %>" />
+				<input type="hidden" name="brand_name" id="" value="<%= brand_name %>" />
+				<input type="hidden" name="id" id="" value="<%= id %>" />
+				
+				<div class="upload-btn">
+					<select class="form-control" name="store" id="store">
+						<option value="shopify">Shopify</option>
+						<option value="tmall">Tmall</option>
+						<option value="cafe24">Cafe24</option>
+					</select>
+				</div>
+				</div>
+			</form>
+		
+			<div class="container">
+				
+				<div id="error" class="error" style="display:none;"></div>
+					<table id = "example" class="table table-bordered">
+					<thead>
+			  <tr>
+				<th></th>
+				<th >SPU</th>
+				<th >SKU</th>
+				<th >Product Name</th>
+				<th >BARCODE NUMBER</th>
+				<th >BRAND</th>
+				<th >TAG PRICE</th>
+				<th >SALE PRICE</th>
+				<th >FABRIC</th>
+				<th >HS CODE</th>
+				<th >(Tmall only)</th>
+				<th >(Tmall only)</th>
+				<th >(Tmall only)</th>
+				<th >(Tmall only)</th>
+				<th >(Tmall only)</th>
+				<th >MADE IN</th>
+				<th >WEIGHT(kg)</th>
+				<th >HOW TO WASH</th>
+				<th >SELLING POINT (description)</th>
+				<th >PRODUCT PRICE</th>
+				<th >SHIPPING FEE</th>
+				<th >TOTAL PRICE(U+V)</th>
+				<th >TOTAL PRICE(U+V)</th>
+		
+				<th >Date Created</th>
+				<th >Date Modified</th>
+				<th >Image</th>
+				<th >Action</th>
+			  </tr>
+			</thead>
+			<tbody>
+				<% if(data != ""){ %>
+		<% for(let i = 0; i < data.length; i++) { %>
+		<% var pDetail =  data[i].product_details; %>
+		<% for(let k = 1; k < pDetail.length; k++) { %>
+		
+					<tr>
+						<td><input type="checkbox" name="check[]" value="<%=  pDetail[k].sku %>"/></td>
+						<td><%=  pDetail[k].spu %></td>
+						<td><%=  pDetail[k].sku %></td>
+						<td><%=  pDetail[k].product_name %></td>
+						<td><%=  pDetail[k].barcode_number %></td>
+						<td><%=  pDetail[k].brand %></td>
+						<td><%=  pDetail[k].tag_price %></td>
+						<td><%=  pDetail[k].sale_price %></td>
+						<td><%=  pDetail[k].fabric %></td>
+						<td><%=  pDetail[k].hs_code %></td>
+						<td><%=  pDetail[k].tmall %></td>
+						<td><%=  pDetail[k].tmall_0 %></td>
+						<td><%=  pDetail[k].tmall_1 %></td>
+						<td><%=  pDetail[k].tmall_2 %></td>
+						<td><%=  pDetail[k].tmall_3 %></td>
+						<td><%=  pDetail[k].made_in %></td>
+						<td><%=  pDetail[k].weight_in_kg %></td>
+						<td><%=  pDetail[k].how_to_wash %></td>
+						<td><%=  pDetail[k].selling_point %></td>
+						<td><%=  pDetail[k].product_price %></td>
+						<td><%=  pDetail[k].shipping_fee %></td>
+						<td><%=  pDetail[k].total_price %></td>
+						<td><%=  pDetail[k].total_price_1 %></td>
+						
+						<td><%=  pDetail[k].created_date %></td>
+						<td><%=  pDetail[k].modified_date %></td>
+						<% if(pDetail[k].image != "_" && pDetail[k].image != " " && pDetail[k].image != "") { %>
+							<td id="<%=  pDetail[k].sku.trim() %>">
+							<% imgdata = pDetail[k].image.replace(new RegExp("'", "gi"),""); %>
+							<% img = imgdata.split(","); %>
+							<img src="<%= img[0] %>" width="50px" height="50px" >
+							<!-- slider -->
+							<!-- Large modal -->
+							<button class="btn btn-default" data-toggle="modal" data-target="#more<%= k %>">View More</button>
+							<div id="more<%= k %>" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+								<div class="modal-dialog modal-lg" style="width:50%">
+									<div class="modal-content">
+										<div id="carousel-example-generic<%= k %>"" class="carousel slide" data-ride="carousel">
+											<!-- Wrapper for slides -->
+											<div class="carousel-inner">
+												<% for(let l = 0; l < img.length; l++) { %>
+													<div class="item <% if(l == 0){ %><%= "active" %><% } %>">
+													<img class="img-responsive" src="<%= img[l] %>" alt="...">
+													<div class="carousel-caption">
+													</div>
+													</div>
+												<% } %>
+											</div>
+											<!-- Controls -->
+											<a class="left carousel-control" href="#carousel-example-generic<%= k %>"" role="button" data-slide="prev">
+												<span class="glyphicon glyphicon-chevron-left"></span>
+											</a>
+											<a class="right carousel-control" href="#carousel-example-generic<%= k %>"" role="button" data-slide="next">
+												<span class="glyphicon glyphicon-chevron-right"></span>
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!-- slider -->
+							</td>   
+							<td id="btn<%=  pDetail[k].sku.trim() %>"><button  id="add<%=  pDetail[k].sku.trim() %>" type="button" class="btn btn-info btn-lg" onclick="openUpdateModal('<%= pDetail[k].sku.trim() %>','<%= dataBase %>','<%= pDetail[k].image_id %>');">Browse</button></td>
+						<% }else{ %>
+													<td id="<%=  pDetail[k].sku.trim() %>"></td>
+							<td id="btn<%=  pDetail[k].sku.trim() %>"><button  id="add<%=  pDetail[k].sku.trim() %>" type="button" class="btn btn-info btn-lg" onclick="openModal('<%= pDetail[k].sku.trim() %>','<%= dataBase %>');">Browse</button></td>
+						<% } %>
+					</tr>
+		
+		
+			<%  } %>
+			<%  } %>   
+			<%  }else{ %>  
+					<tr><td colspan="8">No Product in database</td></tr>
+			
+			<%  } %>   
+		  </tbody>
+					</table>
+				
+				
+			</div>
+			
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">Select Images for upload</h4>
+		</div>
+		<div class="modal-body">
+			<p>
+				<input type="hidden" name="sku" id="sku_value" value="" />
+				<input type="hidden" name="collection_id" id="data_value" value="" />
+		
+				<div class="container2" id="add">
+					<% if(images != ""){ %>
+	
+						<% for(let i = 0; i < images.resources.length; i++) { %>
+							<div class="col-md-3 text-center">
+								<label class="image-checkbox" title="<%= images.resources[i].url %>">
+									<img width="100px" height="100px" src="<%= images.resources[i].url %>" />
+									<input type="checkbox" name="team[]" value="<%= images.resources[i].url %>~<%= images.resources[i].version %>"  />
+									<input style="display:none" type="checkbox" name="id[]" value="<%= images.resources[i].version %>"  />
+								</label>
+							</div>
+						<%  } %>   
+					<%  }else{ %>  
+						No Image
+					<%  } %>   
+				</div>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" onclick="addImage('add');">Upload</button>
+		</div>
+    </div>
+
+  </div>
+</div>
+
+
+<div id="myModal1" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">&times;</button>
+			<h4 class="modal-title">Select Images for upload</h4>
+		</div>
+		<div class="modal-body">
+			<p>
+				<input type="hidden" name="sku" id="sku_value" value="" />
+				<input type="hidden" name="collection_id" id="data_value" value="" />
+		
+				<div class="container2" id="update">
+					<% if(images != ""){ %>
+	
+						<% for(let i = 0; i < images.resources.length; i++) { %>
+							<div class="col-md-3 text-center">
+								<label class="image-checkbox" title="<%= images.resources[i].url %>~<%= images.resources[i].version %>">
+									<img width="100px" height="100px" src="<%= images.resources[i].url %>" />
+									<input id="<%= images.resources[i].version %>" type="checkbox" name="team1[]" value="<%= images.resources[i].url %>~<%= images.resources[i].version %>"  />
+									<input style="display:none" type="checkbox" name="id[]" value="<%= images.resources[i].version %>"  />
+								</label>
+							</div>
+						<%  } %>   
+					<%  }else{ %>  
+						No Image
+					<%  } %>   
+				</div>
+			</p>
+		</div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default" onclick="addImage('update');">Update Image</button>
+		</div>
+    </div>
+
+  </div>
+</div>
+
+			
+<script>
+function openModal(sku, dataBase){
+$('.image-checkbox').find('input:checkbox').prop('checked', false);
+	$('#sku_value').val(sku);
+	$('#data_value').val(dataBase);
+	$('#myModal').modal('show');
+}
+function openUpdateModal(sku, dataBase, imageData){
+$('.image-checkbox').removeClass('image-checkbox-checked');
+$('.image-checkbox').find('input:checkbox').prop('checked', false);
+	$('#sku_value').val(sku);
+	$('#data_value').val(dataBase);
+	var images = imageData.split(',');
+	for(var i = 0;i< images.length;i++){
+	<!-- alert(images[i]);  -->
+		$('#'+images[i]).prop('checked', true);
+		$('#'+images[i]).parent().addClass('image-checkbox-checked');
+	}
+	$('#myModal1').modal('show');
+}
+function uploadValidation(){
+	var values = new Array();
+	$.each($("input[name='check[]']:checked"), function() {
+		values.push($(this).val());
+		imgUrl = $(this).val();
+	});
+	if(values.length > 0){
+		if($('#store').val() == 'tmall'){
+			alert("This module is under construction.");
+			return false;
+		}else if($('#store').val() == 'cafe24'){
+			alert("This module is under construction.");
+			return false;
+		}else{
+			var rv = {};
+			for (var i = 0; i < values.length; ++i){
+				rv[i] = values[i];
+			}
+  			$('#product_sku').val(JSON.stringify(rv));
+			console.log(rv);  
+			console.log(typeof(rv));  
+			console.log(JSON.stringify(rv));  
+			$("#create_collection").attr("action", "/shopify_add_product");
+			return true;
+		}
+	}else{
+		$('#error').show().html("Please check atleast one product");
+		return false;
+	}
+}
+
+
+	function addImage(query){
+		var imgUrl ="";
+		var imgData ="";
+		var n =0;
+		var imageId = new Array();
+		var values = new Array();
+		var sendData = "";
+		<!-- $.each($("input[name='id[]']:checked"), function() { -->
+		<!-- }); -->
+		<!-- $.each($("#"+ query +" input[name='team[]']:checked"), function() { -->
+		$.each($("input[name='team[]']:checked"), function() {
+			sendData = $(this).val().split('~');
+			values.push(sendData[0]);
+			imageId.push(sendData[1]);
+			if(n == 0){var active = "active";}else{ var active = "";	 }
+			imgUrl = sendData[0];
+			imgData += '<div class="item ' + active + '"><img class="img-responsive" src="' + sendData[0] + '" alt="..."><div class="carousel-caption"></div></div>';
+			n++;
+		});
+		if(values == ''){
+			n = 0;
+			$.each($("input[name='team1[]']:checked"), function() {
+				sendData = $(this).val().split('~');
+				values.push(sendData[0]);
+				imageId.push(sendData[1]);
+				if(n == 0){var active = "active";}else{ var active = "";	 }
+				imgUrl = sendData[0];
+				imgData += '<div class="item ' + active + '"><img class="img-responsive" src="' + sendData[0] + '" alt="..."><div class="carousel-caption"></div></div>';
+				n++;
+			});
+		}
+		$('#myModal').modal('hide');
+		$('#myModal1').modal('hide');
+		var sku = $('#sku_value').val();
+		var data_value = $('#data_value').val();
+		var data_var = {"collection_id":data_value,"sku":sku,"image":values};
+		values = encodeURIComponent(values);
+		<!-- alert(imageId);  -->
+		<!-- values = values.replace(/\\/g,"/"); -->
+		$.ajax({ 
+			url: "/update_product/" + data_value + "/" + sku + "/'" + values + "'" + "/"+ imageId, 
+			type: "GET", 
+			<!-- data :data_var, -->
+			<!-- cache:false, -->
+			 contentType:false,
+			<!-- processData :false, -->
+			success: function(result){
+				alert("Updated successfully");
+				<!-- $("#add"+sku).remove(); -->
+				var appendData = '<img width="50px" height="50px" src="' + imgUrl + '"/><button class="btn btn-default" data-toggle="modal" data-target="#more'+sku+'">View More</button><div id="more'+sku+'" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"><div class="modal-dialog modal-lg" style="width:50%"><div class="modal-content"><div id="carousel-example-generic'+sku+'" class="carousel slide" data-ride="carousel"><div class="carousel-inner">'+imgData+'</div><a class="left carousel-control" href="#carousel-example-generic'+sku+'" role="button" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a><a class="right carousel-control" href="#carousel-example-generic'+sku+'" role="button" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a></div></div></div></div>'; 
+				$("#"+sku).empty(); 
+				$("#"+sku).append(appendData); 
+				$('.image-checkbox').removeClass('image-checkbox-checked');
+$('.image-checkbox').find('input:checkbox').prop('checked', false);
+				<!-- 	  <a onclick=\'return deleteImage("'+dataBase+'","'+sku+'")\' href="javascript:void(0);">X</a>
+				<!-- 	$("#btn"+sku).append('<a id="add'+sku+'" class="btn btn-primary" onclick=\'return updateProduct("'+dataBase+'","'+sku+'","'+spu+'")\' href="javascript:void(0);">Save</a>'); 
+				--> -->
+				return false;
+			}
+		});
+	}	
+	
+	function deleteImage(dataBase, sku){
+	
+		$.ajax({ 
+			 url: "/delete_product_image/" + dataBase + "/" + sku, 
+			type: "GET", 
+			cache:false,
+			contentType:false,
+			processData :false,
+			success: function(result){
+				$("#"+sku).empty();
+				return false;
+			}
+		});
+	}	
+	
+	function updateProduct(dataBase, sku, spu){
+	
+		$.ajax({ 
+			 url: "/update_product/" + dataBase + "/" + sku + "/" + spu, 
+			type: "GET", 
+			cache:false,
+			contentType:false,
+			processData :false,
+			success: function(result){
+				alert("Updated successfully");
+				$("#add"+sku).remove();
+				return false;
+			}
+		});
+	}	
+$(document).ready(function() {
+var table = $('#example').DataTable({ paging:false,ordering: false,lengthChange : false});
+ 
+// #myInput is a <input type="text"> element
+$('#myInput').on( 'keyup', function () {
+    table.search( this.value ).draw();
+} );
+			<!-- $('table').SetEditable(); -->
+			<!-- $('#example').dataTable();  -->
+			
+		   $(".image-checkbox").each(function () {
+            if ($(this).find('input[type="checkbox"]').first().attr("checked")) {
+		<!-- alert("here3"); -->
+                $(this).addClass('image-checkbox-checked');
+            }
+            else {
+		<!-- alert("here4"); -->
+                $(this).removeClass('image-checkbox-checked');
+            }
+        });
+
+        // sync the state to the input
+        $(".image-checkbox").on("click", function (e) {
+		<!-- alert("here");	 -->
+            if ($(this).hasClass('image-checkbox-checked')) {
+                $(this).removeClass('image-checkbox-checked');
+                <!-- $(this).find('input[type="checkbox"]').first().removeAttr("checked"); -->
+                $(this).find('input[type="checkbox"]').first().prop('checked', false);
+            }
+            else {
+		<!-- alert("here1"); -->
+                $(this).addClass('image-checkbox-checked');
+                <!-- $(this).find('input[type="checkbox"]').first().attr("checked", "checked"); -->
+                $(this).find('input[type="checkbox"]').first().prop('checked', true);
+            }
+
+            e.preventDefault();
+        });
+ 
+	 $("#create_collection").validate({
+		rules: {
+			col_name: "required",
+		},
+		messages: {
+			col_name: "Please enter collection name.",
+		},
+		submitHandler: function(form) {
+			form.submit();
+		}
+	});
+	
+});
+	function checkUncheckAll(){
+	
+		 if($('#checkAll').prop('checked') == true){
+			$('#checkAll').prop('checked', false);
+			$('#example').find('input:checkbox').prop('checked', false);
+		}else{
+			$('#checkAll').prop('checked', true);
+			$('#example').find('input:checkbox').prop('checked', true);
+		}
+	}
+	
+	
+	
+		
+</script>
+			<style>
+			.container2{width:100%	}
+    .image-checkbox
+    {
+        cursor: pointer;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+        border: 4px solid transparent;
+        outline: 0;
+    }
+
+        .image-checkbox input[type="checkbox"]
+        {
+            display: none;
+        }
+
+    .image-checkbox-checked
+    {
+        border-color: #f58723;
+    }
+	#error{width: 100%;
+    float: left;
+    color: red;}
+	#example_filter{display:none !important}
+	#example_info{display:none !important}
+</style>
+		</body>
+	</html>
+
+

@@ -1,0 +1,9 @@
+Collection Name		:		Description
+
+admins				:		Store login detail
+
+brands				:		Store brand name and gogle sheet id
+
+collections 		:		Store collection name (google sheet tab name), brand id and google sheet tab id
+
+sheet_data			:		Store collection id and prodcut detail
