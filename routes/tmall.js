@@ -129,12 +129,17 @@ client.execute('taobao.products.search', {
 })
 
 
-var arrData = new Array();
 
 
 router.get("/orders", function(req, res){
   res.render("tmall/tmall-orders");
 });
+
+
+
+
+var arrData = new Array();
+
 
 router.post("/orders", function(req, res){
 
@@ -152,7 +157,7 @@ router.post("/orders", function(req, res){
   
   client.execute('taobao.trades.sold.get', {
     'session': process.env.TMALL_SESSION,
-    'fields': 'num_iid,receiver_state,title,orders.oid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,num,has_buyer_message,seller_flag',
+    'fields': 'tid,num_iid,receiver_state,title,orders.oid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,num,has_buyer_message,seller_flag',
     'start_created': date_startReplace, // datepicker start
     'end_created' : date_endReplace, //datepicker end
   'type': 'tmall_i18n',
@@ -178,11 +183,12 @@ router.post("/orders", function(req, res){
                 var split2 = split1[0].split(':', 2);
                 var split4 = new String("品牌");
                 var split5 = new String(split2);
+
                 if (split4.charAt(0) === split5.charAt(0)) { //브랜드명 추출
   
                     var splitInfo = [];
                     splitInfo.push(split2[1]);
-                    //console.log(splitInfo);
+                
                     splitInfo.forEach(function (element2) { // 엑셀 데이터
                         var temp = {
                   
@@ -207,15 +213,17 @@ router.post("/orders", function(req, res){
                             "등록시간" : "",
                             "발송시간" : "",
                             "비고" : element.seller_flag
-                          }
-                        
+                           
+                        }
                         arrData.push(temp);
+                     
                     });
                 }
                 else {
                     var split3 = split1[1].split(':', 2);
                     var splitInfo2 = [];
                     splitInfo2.push(split3[1]);
+                 
                     splitInfo2.forEach(function (element3) {
                         var temp = {
                           "주문날짜": element.pay_time,
@@ -240,36 +248,42 @@ router.post("/orders", function(req, res){
                           "발송시간" : "",
                           "비고" : element.seller_flag
                         };
-                        arrData.push(temp);
+                        arrData.push(temp); // temp를 arrData에 집어넣음
+                        // temp가 여러개면 차례로 arrData에 들어감
   
                     });
                 }
+                var lastData = arrData[arrData.length - 1];
+               //console.log(lastData);
+                var lastOrder = new Array();
+                lastOrder.push(lastData);
+            
+                             
+                             var model = mongoXlsx.buildDynamicModel(lastOrder);
+                                 //엑셀 쓰기
+                              
 
-  
-  
-  
-                                var model = mongoXlsx.buildDynamicModel(arrData); //엑셀 쓰기
-                                mongoXlsx.mongoData2Xlsx(arrData, model, function (err, data) {
-                                    console.log('File saved at:', data.fullPath);
 
-                                    mongoose.connect("mongodb://localhost:27017/api", { useNewUrlParser: true } ,function(err,db){ // db 연결
-                                      if(err){
-                                        console.log(err);
-                                      }else{
-                                        //console.log(arrData);
-                                        try{
-                                          db.collection('api').insertMany(arrData);
-                                          //db.collection('testabc').insertOne(tempdata);
-                                        } 
-                                        catch(e){console.log(e);}
-                                        db.close();
-                                      }
-                                    });
-                                  
-                                });
+                               mongoXlsx.mongoData2Xlsx(lastOrder, model, function (err, data) {
+                                console.log('File saved at:', data.fullPath);
 
-                               // console.log(arrData);
-
+                                  });
+                                /*
+                                mongoose.connect("mongodb://localhost:27017/api", { useNewUrlParser: true } ,function(err,db){ // db 연결
+                                if(err){
+                                  console.log(err);
+                                }else{
+                                  //console.log(arrData);
+                                  try{
+                                    db.collection('api').insertMany(lastOrder);
+                                    //db.collection('testabc').insertOne(tempdata);
+                                  } 
+                                  catch(e){console.log(e);}
+                                  db.close();
+                                }
+                              });
+*/
+                            
                             } else console.log(error);
                         });
                         
