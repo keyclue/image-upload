@@ -6,17 +6,14 @@
         </div>
     </div>
     <div id="data-table">
-        <%- Orders %>
+        //
+        <%-Orders%>
     </div>
 </div>
 </div>
 <div style="width: 30%; margin: 25px auto;">
-    <div class="form-group">
-        <input class="form-control " id="filename" type="text" Placeholder="file name" name="filename" />
-    </div>
-    <br>
     <div class="form-goup" id="xportxlsx">
-        <input class="btn btn-outline-secondary btn-block" type="submit" name="submit" value="Export to XLSX!" onclick="doit('xlsx');">
+        <input class="btn btn-outline-secondary btn-block" type="submit" name="submit" value="Export to XLSX!" onclick="doit('xlsx', '주문화일.xlsx');">
     </div>
     <br>
     <a href="/tmall/orders"><button class="btn btn-outline-secondary btn-block">다른 티몰오더보기</button></a>
@@ -25,11 +22,25 @@
     <br>
     <a href="/tmall/search"><button class="btn btn-outline-secondary btn-block">티몰 제품검색</button></a>
     <br>
-    <a href="/tmall/search"><button class="btn btn-outline-secondary btn-block">티몰 홈</button></a>
+    <a href="/tmall"><button class="btn btn-outline-secondary btn-block">티몰 홈</button></a>
     <br>
     <a href="/api"><button class="btn btn-outline-secondary btn-block">관리 홈</button></a>
 </div>
 </div>
 <% include ../partials/scripts %>
 <script type="text/javascript" src="/scripts/xlsx-util.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/handsontable@6.2.2/dist/handsontable.full.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/handsontable@6.2.2/dist/handsontable.full.min.css" rel="stylesheet" media="screen">
+<script>
+    window.onload = function what() {
+        var container = document.getElementById('data-table');
+        var hot = new Handsontable(container, {
+            data: <%= Orders %>,
+            rowHeaders: true,
+            colHeaders: true,
+            filters: true,
+            dropdownMenu: true
+        });
+    }
+</script>-->
 <% include ../partials/footer %>

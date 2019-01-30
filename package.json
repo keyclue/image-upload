@@ -23,6 +23,7 @@
 		"express": "^4.16.4",
 		"express-session": "^1.15.6",
 		"flat": "^4.1.0",
+		"handsontable": "^6.2.2",
 		"i": "^0.3.6",
 		"json2xls": "^0.1.2",
 		"method-override": "^3.0.0",

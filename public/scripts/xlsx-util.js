@@ -1,6 +1,7 @@
 function doit(type, fn, dl) {
   var elt = document.getElementById('data-table');
-  //  var fn = document.getElementById('filename') || '주문화일';
+  //  var fn = document.getElementById('filename') + (type || 'xlsx');
+  console.log(fn);
   var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
   return dl ?
     XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }) :
