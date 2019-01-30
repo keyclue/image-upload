@@ -131,7 +131,7 @@ router.post('/orders', function (req, res) {
 				'Tid,created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
 			start_created: '2019-01-09 00:00:00',
 			//'end_created':'2019-12-31 23:59:59',
-			status: 'WAIT_SELLER_SEND_GOODS',
+			//status: 'WAIT_SELLER_SEND_GOODS',
 			type: 'tmall_i18n'
 			//  'tag':'time_card',//
 			//  'page_no':'1',
@@ -164,21 +164,21 @@ router.post('/orders', function (req, res) {
 					orderInfo.push(temp);
 				});
 				//        console.log(JSON.stringify(orderInfo))
-				var xls = json2xls(orderInfo, {
-					fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰']
-				});
+				/*				var xls = json2xls(orderInfo, {
+									fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰']
+								});*/
 				var table = tableify(orderInfo);
 				res.render('tmall/tmall-orders-success', { Orders: table });
 				/*				xlsx.writeFile(
-					{
-						SheetNames: [ 'Sheet1' ],
-						Sheets: {
-							Sheet1: orderInfo
-						}
-					},
-					'./a-outputs/orderinfo-1.xlsx'
-				);
-				console.log('xlsx  file written!');*/
+				/*					{
+										SheetNames: ['Sheet1'],
+										Sheets: {
+											Sheet1: orderInfo
+										}
+									},
+									'./a-outputs/orderinfo-1.xlsx'
+								);
+								console.log('xlsx  file written!');*/
 			} else console.log(error);
 		}
 	);
