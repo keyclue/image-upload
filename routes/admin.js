@@ -114,9 +114,9 @@ router.post('/create_option', function (request, response) {
             response.send({ "error": err });
         }
         if (result == null) {
-            response.redirect('/manage-options');
+            response.redirect('/admin/manage-options');
         } else {
-            response.redirect('/manage-options');
+            response.redirect('/admin/manage-options');
         }
     });
 });
@@ -205,7 +205,7 @@ router.all('/collection_view/:_id/:brand_name', isLoggedIn, function (request, r
     });
 });
 
-router.all('/brands', isLoggedIn, function (request, response) {
+router.all('/brands', function (request, response) {
     mongo.connect(uristring, function (err, db) {
         if (err) {
             db.close();

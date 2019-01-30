@@ -14,7 +14,7 @@ var json2xls = require('json2xls');
 var options = {};
 var client = require('node-rest-client-promise').Client(options);
 var token = {
-    headers: { "Authorization": "Bearer fIqXuGR8CCpIfy1IiXII5L" } // Bearer 뒤에 access_token을 넣는다.
+    headers: { "Authorization": "Bearer " + process.env.CAFE24_ACCESS_TOKEN } // Bearer 뒤에 access_token을 넣는다.
 };
 
 

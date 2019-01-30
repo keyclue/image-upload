@@ -25,6 +25,37 @@ var createOption = function (input, callback) {
 }
 exports.createOption = createOption;
 
+function addSheet(auth) {
+	var sheets = google.sheets('v4');
+	sheets.spreadsheets.create({
+		auth: auth,
+		resource: {
+			properties: {
+				title: brand_name
+			}
+		}
+	}, (err, response) => {
+		if (err) {
+			console.log("errr" + err);
+			return callback(null, null);
+		} else {
+			// console.log("Added"+JSON.stringify(response));   
+			// res.send(response);   
+			db.collection("brands", function (err, collection) {
+				collection.insert({ "name": brand_name, 'sheet_id': response.spreadsheetId }, function (err, success) {
+					if (err) {
+						return callback(null, null);
+					} else {
+						db.close();
+						return callback(null, "success");
+					}
+				});
+			});
+
+		}
+	});
+}
+
 var createBrand = function (input, callback) {
 	var brand_name = input.brand_name;
 	mongo.connect(uristring, function (err, db) {
@@ -39,36 +70,6 @@ var createBrand = function (input, callback) {
 				console.log("auth", auth);
 				addSheet(auth);
 			});
-			function addSheet(auth) {
-				var sheets = google.sheets('v4');
-				sheets.spreadsheets.create({
-					auth: auth,
-					resource: {
-						properties: {
-							title: brand_name
-						}
-					}
-				}, (err, response) => {
-					if (err) {
-						console.log("errr" + err);
-						return callback(null, null);
-					} else {
-						// console.log("Added"+JSON.stringify(response));   
-						// res.send(response);   
-						db.collection("brands", function (err, collection) {
-							collection.insert({ "name": brand_name, 'sheet_id': response.spreadsheetId }, function (err, success) {
-								if (err) {
-									return callback(null, null);
-								} else {
-									db.close();
-									return callback(null, "success");
-								}
-							});
-						});
-
-					}
-				});
-			}
 		}
 	});
 }
