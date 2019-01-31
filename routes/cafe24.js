@@ -16,6 +16,23 @@ var client = require('node-rest-client-promise').Client(options);
 var token = {
     headers: { "Authorization": "Bearer " + process.env.CAFE24_ACCESS_TOKEN } // Bearer 뒤에 access_token을 넣는다.
 };
+var TokenProvider = require('refresh-token');
+
+var tokenProvider = new TokenProvider('process.env.CAFE24_TOKEN_URL', {
+    refresh_token: process.env.CAFE24_REFRESH_TOKEN,
+    client_id: process.env.CAFE24_APP_KEY,
+    client_secret: process.env.CAFE24_APP_SECRET
+});
+
+var token = [];
+console.log(token);
+tokenProvider.getToken(function (err, token) {
+    console.log('Token=', token);
+    token = {
+        headers: { "Authorization": "Bearer " + token } // Bearer 뒤에 access_token을 넣는다.
+    };
+});
+console.log(token);
 
 
 var strArray = [];

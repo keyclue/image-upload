@@ -8,6 +8,7 @@ var Shopify = new shopifyAPI({
 	shopify_api_key: 'aa2839db2d7cd62e8b5d9094ea359616_old', // Your API key 
 	access_token: 'a0577311b7e283cd4b3e9a7396326a00_old' // Your API password 
 });
+
 var addProduct = function (input, callback) {
 
 	var id = input.id;
@@ -254,4 +255,6 @@ var addProduct = function (input, callback) {
 		});
 	});
 }
+
+
 exports.addProduct = addProduct;
