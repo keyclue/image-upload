@@ -8,11 +8,10 @@ var fs = require('fs');
 var multer = require('multer');
 var tableify = require('tableify');
 var middleware = require('../middleware');
-var json2xls = require('json2xls');
 
 var ApiClient = require('taobao-sdk').ApiClient;
 
-const client = new ApiClient({
+var client = new ApiClient({
 	appkey: process.env.TMALL_API_KEY,
 	appsecret: process.env.TMALL_API_SECRET,
 	url: 'http://gw.api.taobao.com/router/rest'
@@ -122,137 +121,133 @@ router.get('/orders', function (req, res) {
 	res.render('tmall/tmall-orders');
 });
 
-router.post('/orders', function (req, res) {
-	var qinput = req.body.keyword;
-	var Dates = req.body.dates;
-	var arr = Dates.split(" - ");
-	console.log(arr)
-	client.execute(
-		'taobao.trades.sold.get',
-		{
-			session: process.env.TMALL_SESSION,
-			fields:
-				'Tid,created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
-			start_created: '2019-01-09 00:00:00',
-			//'end_created':'2019-12-31 23:59:59',
-			//status: 'WAIT_SELLER_SEND_GOODS',
-			type: 'tmall_i18n'
-			//  'tag':'time_card',//
-			//  'page_no':'1',
-			//  'page_size':'40',
-			//  'use_has_next':'true'
-		},
-		function (error, response) {
-			var orderInfo = [];
-			if (!error) {
-				var Orders = response.trades.trade;
-				Orders.forEach(function (element) {
-					var temp = {
-						주문자ID: element.buyer_nick,
-						주문시각: element.created,
-						수량: element.num,
-						sku: element.orders.order.outer_sku_id,
-						상품명: element.orders.order.title,
-						결제시각: element.pay_time,
-						결제액: element.payment,
-						배송주소: element.receiver_address,
-						시: element.receiver_city,
-						구: element.receiver_district,
-						주문자휴대폰: element.receiver_mobile,
-						수신자명: element.receiver_name,
-						성: element.receiver_state,
-						우편번호: element.receiver_zip,
-						점포명: element.title,
-						상태: element.status
-					};
-					orderInfo.push(temp);
-				});
-				//        console.log(JSON.stringify(orderInfo))
-				/*				var xls = json2xls(orderInfo, {
-									fields: ['주문자ID', '주문시각', '결제시각', 'sku', '상품명', '결제액', '성', '시', '구', '배송주소', '주문자휴대폰']
-								});*/
-				var table = tableify(orderInfo);
-				res.render('tmall/tmall-orders-success', { Orders: table });
-				/*				xlsx.writeFile(
-<<<<<<< HEAD
-				/*					{
-										SheetNames: ['Sheet1'],
-										Sheets: {
-											Sheet1: orderInfo
-										}
-									},
-									'./a-outputs/orderinfo-1.xlsx'
-								);
-								console.log('xlsx  file written!');*/
-			} else console.log(error);
-		}
-	);
-});
 
-/*let promisify = require('util').promisify;
+router.post("/orders", function (req, res) {
 
-let tmallAPI = function(error, tdata) {
-	api_name = tdata.api_name;
-	options = tdata.options;
-	console.log(api_name, options);
-	client.execute(api_name, options, function(error, response) {
-		return response;
-		console.log('response=' + response);
-	});
-};
+	var date = req.body.dates;
 
-let orderInfoGet = () => {
-	let orderSheet = new Promise((resolve, reject) => {
-		if (!error) {
-			orderInfo = [];
+	var date_Split = date.split(' - ');
+	var date_Start = date_Split[0].split('/');
+
+	var date_startReplace = date_Start[2] + '-' + date_Start[0] + '-' + date_Start[1];
+
+	var date_end = date_Split[1].split('/');
+	var date_endReplace = date_end[2] + '-' + date_end[0] + '-' + date_end[1];
+	// datepicker 포맷을 타오바오 날짜 형식으로 변경
+
+	var brand = {};
+	var Props = {};
+	var arrData = [];
+	var splitInfo = [];
+
+	function renderOrderInfo(arrdata) {
+		console.log('arrdata', arrData);
+		var table = tableify(arrData);
+		res.render('tmall/tmall-orders-success', { table: table });
+	}
+
+	client.execute('taobao.trades.sold.get', {
+		'session': process.env.TMALL_SESSION,
+		'fields': 'tid,num_iid,receiver_state,title,orders.oid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,num,has_seller_memo,has_buyer_message,seller_flag',
+		'start_created': date_startReplace, // datepicker start
+		'end_created': date_endReplace, //datepicker end
+		'status': 'WAIT_BUYER_CONFIRM_GOODS',
+		'type': 'tmall_i18n'
+	}, function (error, response) {
+		var total_results = response.total_results;
+		if (!error && total_results != 0) {
 			var Orders = response.trades.trade;
-			Orders.forEach(function(element) {
+			var index = 0;
+			Orders.forEach(function (element) {
+				/*				element.orders.order = order_items;
+								order_items.forEach (order_items){  */
 				var temp = {
-					주문자ID: element.buyer_nick,
-					주문시각: element.created,
-					수량: element.num,
-					sku: element.orders.order.outer_sku_id,
-					상품명: element.orders.order.title,
-					결제시각: element.pay_time,
-					결제액: element.payment,
-					배송주소: element.receiver_address,
-					시: element.receiver_city,
-					구: element.receiver_district,
-					주문자휴대폰: element.receiver_mobile,
-					수신자명: element.receiver_name,
-					성: element.receiver_state,
-					우편번호: element.receiver_zip,
-					점포명: element.title,
-					상태: element.status
+					"고객ID": element.buyer_nick,
+					"주문날짜": element.pay_time,
+					"주문번호": element.orders.order[0].oid,
+					"결제시간": element.pay_time,
+					"수취인": element.receiver_name,
+					"핸드폰번호": element.receiver_mobile,
+					"우편번호": element.receiver_zip,
+					"수취정보": element.receiver_state + element.receiver_city + element.receiver_district + element.receiver_address,
+					"SKU": element.orders.order[0].outer_sku_id,
+					"상품명": element.orders.order[0].title,
+					"단가": element.payment,
+					"USD 가격": element.payment / 7,
+					"개수": element.num,
+					"물류회사": "",
+					"송장번호": "",
+					"브랜드": "",
+					"등록시간": "",
+					"발송시간": "",
+					"판매자메모": "",
+					"구매자요청": ""
 				};
-				orderInfo.push(temp);
-			});
-			resolve(orderInfo);
-		} else reject(error);
-	});
-};
 
-router.post('/orders1', function(req, res) {
-	var tdata = {
-		api_name: 'taobao.trades.sold.get',
-		options: {
-			session: process.env.TMALL_SESSION,
-			fields:
-				'Tid,created,title,buyer_nick,pay_time,status,receiver_name,receiver_mobile,receiver_zip,receiver_state,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,payment,num,orders.title',
-			start_created: '2019-01-09 00:00:00',
-			//'end_created':'2019-12-31 23:59:59',
-			//  'status':'WAIT_SELLER_SEND_GOODS',
-			type: 'tmall_i18n'
-			//  'tag':'time_card',//
-			//  'page_no':'1',
-			//  'page_size':'40',
-			//  'use_has_next':'true'
+				if (element.has_buyer_message || element.has_seller_memo) {
+					console.log('has buyer message!!!');
+					client.execute('taobao.trade.get', {
+						'session': process.env.TMALL_SESSION,
+						'fields': 'seller_memo,buyer_message',
+						'tid': element.tid
+					}, function (error, response) {
+						console.log('message=', response);
+						if (!error) {
+							var orders_Memo = response.trade;
+							if (element.has_seller_memo) {
+								temp.판매자메모 = orders_Memo.seller_memo;
+							}
+							if (element.has_buyer_message) {
+								temp.구매자요청 = orders_Memo.buyer_message;
+							}
+						}
+						else console.log(error);
+					});
+				}
+				if (element.payment <= 2000) {
+					temp.물류회사 = "CAINIAO";
+				}
+				else temp.물류회사 = "EMS";
+
+				client.execute('taobao.item.seller.get', { //product_id 가져오기
+					'session': process.env.TMALL_SESSION,
+					'fields': 'product_id',
+					'num_iid': element.num_iid
+				}, function (error, response) {
+					if (!error) {
+						client.execute('taobao.product.get', {
+							'session': process.env.TMALL_SESSION, //브랜드명 가져오기
+							'fields': 'props_str',
+							'product_id': response.item.product_id
+						}, function (error, response) {
+							if (!error) {
+								brand = response.product.props_str;
+								brand = brand.replace(';', '","');
+								brand = brand.replace('货号:', '货号":"');
+								brand = brand.replace('品牌:', '品牌":"');
+								Props = JSON.parse('{"' + brand + '"}');
+								brand = Props.品牌;
+								temp.브랜드 = brand;
+								arrData.push(temp);
+								index++;
+								if (index === total_results) {
+									console.log('arrData', arrData);
+									renderOrderInfo(arrData);
+								}
+							}
+							else console.log(error);
+						});
+					}
+					else console.log(error);
+				});
+			});
 		}
-	};
-	var orderInfo = tmallAPI(null, tdata);
-	var table = tableify(orderInfo);
-	console.log(orderInfo);
-	res.render('tmall/tmall-orders-success', { Orders: table });
-});*/
+		else {
+			console.log(error);
+			var table = "주문을 찾을 수 없습니다.";
+			res.render('tmall/tmall-orders-success', { table: table });
+		}
+	});
+});
 
 module.exports = router;

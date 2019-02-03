@@ -22,7 +22,7 @@ var createOption = function (input, callback) {
 			});
 		}
 	});
-}
+};
 exports.createOption = createOption;
 
 function addSheet(auth) {
@@ -72,7 +72,7 @@ var createBrand = function (input, callback) {
 			});
 		}
 	});
-}
+};
 exports.createBrand = createBrand;
 
 var deleteBrand = function (input, callback) {
@@ -94,7 +94,7 @@ var deleteBrand = function (input, callback) {
 			});
 		}
 	});
-}
+};
 exports.deleteBrand = deleteBrand;
 
 var saveSheetData = function (input, callback) {
@@ -118,5 +118,5 @@ var saveSheetData = function (input, callback) {
 			});
 		}
 	});
-}
+};
 exports.saveSheetData = saveSheetData;

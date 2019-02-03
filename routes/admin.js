@@ -212,7 +212,6 @@ router.all('/brands', function (request, response) {
             console.log('ERROR connecting to: ' + uristring + '. ' + err);
             respone.send(err);
         } else {
-            console.log(db)
             db.collection("brands", function (err, collection) {
                 collection.find({}).toArray(function (error, success) {
                     if (error) {
