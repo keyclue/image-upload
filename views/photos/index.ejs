@@ -1,31 +1,33 @@
-<% include ../partials/header %> 
-
-     <header class="jumbotron">
-         <div class="container">
-             <h1><span class="glyphicon glyphicon-camera"></span> AI Photo Editor!</h1>
-             <p>Edit photos optimal for your store use</p>
-             <p>
+<% include ../partials/header %>
+<div style="width: 100%; margin: 10px auto;">
+    <div class="container-fluid">
+        <header class="jumbotron">
+            <h1><span class="glyphicon glyphicon-camera"></span> AI Photo Editor!</h1>
+            <p>Edit photos optimal for your store use</p>
+            <p>
                 <a class="btn btn-outline-secondary btn-lg" href="/photos/new">Add New Photos</a>
-             </p>
-         </div>
-     </header>
-     
-     <div class="row text-center" style="display:flex; flex-wrap: wrap;">
-        <% photos.forEach(function(photo){ %>
+            </p>
+        </header>
+
+        <div class="row text-center" style="display:flex; flex-wrap: wrap;">
+            <% photos.forEach(function(photo){ %>
             <div class="col-md-3 col-sm-6">
                 <div class="thumbnail">
-                   <img src="<%= photo.image %>">
-                   <div class="caption">
-                       <h4><%= photo.name %></h4>
-                   </div>
-                   <p>
-                       <a href="/photos/<%= photo._id %>" class="btn btn-outline-secondary">Edit Photo</a>
-                   </p>
-                   <% console.log(photo) %>
+                    <img src="<%= photo.image %>">
+                    <div class="caption">
+                        <h4>
+                            <%= photo.name %>
+                        </h4>
+                    </div>
+                    <p>
+                        <a href="/photos/<%= photo._id %>" class="btn btn-outline-secondary">Edit Photo</a>
+                    </p>
+                    <% console.log(photo) %>
                 </div>
             </div>
-        <% }); %>
+            <% }); %>
+        </div>
     </div>
-
+</div>
 <% include ../partials/scripts %>
 <% include ../partials/footer %>

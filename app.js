@@ -77,7 +77,7 @@ app.use('/admin', adminRoutes);
 var dropzoneRoutes = require('./routes/dropzone');
 app.use('/dropzone', dropzoneRoutes);
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3000;
 app.listen(port, process.env.IP, function () {
 	console.log('The Keyclue Server Has Started at Port ' + port + '!');
 });
