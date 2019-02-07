@@ -182,100 +182,121 @@ router.post("/orders", function (req, res) {
 							var num_items = Orders.length;
 							console.log(num_items);
 							var index1 = 0;
+
 							Orders.forEach((Order) => {
-								client.execute('taobao.item.seller.get', { //product_id 가져오기
+								client.execute('taobao.logistics.orders.detail.get', {
 									'session': process.env.TMALL_SESSION,
-									'fields': 'product_id',
-									'num_iid': Order.num_iid
+									'fields': 'tid,order_code',
+									'tid': Trade.tid,
+									'page_no': '1',
+									'page_size': '40'
 								}, function (error, response) {
 									if (!error) {
-										client.execute('taobao.product.get', {
-											'session': process.env.TMALL_SESSION, //브랜드명 가져오기
-											'fields': 'props_str',
-											'product_id': response.item.product_id
+										//									console.log(response);
+										order_code = response.shippings.shipping[0].order_code;
+										console.log(order_code);
+										client.execute('taobao.item.seller.get', { //product_id 가져오기
+											'session': process.env.TMALL_SESSION,
+											'fields': 'product_id',
+											'num_iid': Order.num_iid
 										}, function (error, response) {
 											if (!error) {
-												var order_num = JSON.stringify(Order.oid);
-												console.log(order_num)
-												var temp = {
-													"주문날짜": Trade.pay_time,
-													"매장": Trade.title,
-													"주문번호": order_num,
-													"고객ID": Trade.buyer_nick,
-													"결제시간": Trade.pay_time,
-													"수취인": Trade.receiver_name,
-													"핸드폰번호": Trade.receiver_mobile,
-													"우편번호": Trade.receiver_zip,
-													"수취인주소": Trade.receiver_state + Trade.receiver_city + Trade.receiver_district + Trade.receiver_address,
-													"SKU": Order.outer_sku_id,
-													"상품명": Order.title,
-													"가격": Trade.payment,
-													"USD 가격": (Trade.payment / 7.00).toFixed(2),
-													"개수": Order.num,
-													"물류회사": "",
-													"송장번호": "",
-													"브랜드": "",
-													"구매자요청": "",
-													"등록시간": "",
-													"발송시간": "",
-													"판매자메모": "",
-													"합배송": "",
-													"환불상태": ""
-												};
-											}
-											if (num_items > 1) {
-												temp.합배송 = '동일고객합배송';
-											}
-											if (Trade.payment >= 5000) {
-												temp.물류회사 = "EMS";
-											}
-											else temp.물류회사 = "ICB";
-											if (orders_Memo.seller_memo) {
-												temp.판매자메모 = orders_Memo.seller_memo;
-											}
-											if (orders_Memo.buyer_message) {
-												temp.구매자요청 = orders_Memo.buyer_message;
-											}
-											if (Order.refund_status === "SUCCESS") {
-												temp.환불상태 = "환불"
-											}
+												client.execute('taobao.product.get', {
+													'session': process.env.TMALL_SESSION, //브랜드명 가져오기
+													'fields': 'props_str',
+													'product_id': response.item.product_id
+												}, function (error, response) {
+													if (!error) {
+														var order_num = JSON.stringify(Order.oid);
+														console.log(order_num)
+														var temp = {
+															"주문날짜": Trade.pay_time,
+															"매장": Trade.title,
+															"주문번호": order_num,
+															"고객ID": Trade.buyer_nick,
+															"결제시간": Trade.pay_time,
+															"수취인": Trade.receiver_name,
+															"핸드폰번호": Trade.receiver_mobile,
+															"우편번호": Trade.receiver_zip,
+															"수취인주소": Trade.receiver_state + Trade.receiver_city + Trade.receiver_district + Trade.receiver_address,
+															"SKU": Order.outer_sku_id,
+															"상품명": Order.title,
+															"가격": Trade.payment,
+															"USD 가격": (Trade.payment / 7.00).toFixed(2),
+															"개수": Order.num,
+															"물류회사": "",
+															"송장번호": order_code,
+															"브랜드": "",
+															"구매자요청": "",
+															"등록시간": "",
+															"발송시간": "",
+															"판매자메모": "",
+															"합배송": "",
+															"환불상태": ""
+														};
 
-											brand = response.product.props_str;
-											brand = brand.replace(';', '","');
-											brand = brand.replace('货号:', '货号":"');
-											brand = brand.replace('品牌:', '品牌":"');
-											Props = JSON.parse('{"' + brand + '"}');
-											brand = Props.品牌;
-											temp.브랜드 = brand;
+														if (num_items > 1) {
+															temp.합배송 = '동일고객합배송';
+														}
+														if (Trade.payment >= 5000) {
+															temp.물류회사 = "EMS";
+														}
+														else temp.물류회사 = "ICB";
+														if (orders_Memo.seller_memo) {
+															temp.판매자메모 = orders_Memo.seller_memo;
+														}
+														if (orders_Memo.buyer_message) {
+															temp.구매자요청 = orders_Memo.buyer_message;
+														}
+														if (Order.refund_status === "SUCCESS") {
+															temp.환불상태 = "환불"
+														}
 
-											arrData.push(temp);
-											index1++;
-											if (index1 === num_items) {
-												index++;
-												if (index === total_results) {
-													arraysort(arrData, '주문날짜', '고객ID');
-													renderOrderInfo();
-												}
+														brand = response.product.props_str;
+														brand = brand.replace(';', '","');
+														brand = brand.replace('货号:', '货号":"');
+														brand = brand.replace('品牌:', '品牌":"');
+														Props = JSON.parse('{"' + brand + '"}');
+														brand = Props.品牌;
+														temp.브랜드 = brand;
+
+														arrData.push(temp);
+														index1++;
+														if (index1 === num_items) {
+															index++;
+															console.log(index, index1, temp)
+															if (index === total_results) {
+																arraysort(arrData, '주문날짜', '고객ID');
+																renderOrderInfo();
+															}
+														}
+													}
+													else {
+														index1++;
+														if (index1 === num_items) {
+															index++;
+														}
+														console.log('product.get error', index, error);
+													}
+												});
 											}
 											else {
 												index1++;
 												if (index1 === num_items) {
 													index++;
 												}
-												console.log('product.get error', index, error);
+												console.log('item.seller.get error', index, error);
+												console.log(Trade);
 											}
 										});
 									}
-									else {
-										index1++;
-										if (index1 === num_items) {
-											index++;
-										}
-										console.log('item.seller.get error', index, error);
-										console.log(Trade);
-									}
-								});
+									else console.log('logistics.get err', error);
+								})
 							});
+
+
+
+
 						}
 						else {
 							index++
