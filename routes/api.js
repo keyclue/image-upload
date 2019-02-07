@@ -9,16 +9,16 @@ var multer = require('multer');
 var tableify = require('tableify');
 var middleware = require('../middleware');
 var storage = multer.diskStorage({
-	destination: function(req, file, cb) {
+	destination: function (req, file, cb) {
 		cb(null, '/tmp/keyclue-upload');
 	},
-	filename: function(req, file, callback) {
+	filename: function (req, file, callback) {
 		callback(null, Date.now() + file.originalname);
 	}
 });
 xlsxj = require('xlsx-2-json');
 
-var xlsxFilter = function(req, file, cb) {
+var xlsxFilter = function (req, file, cb) {
 	// accept image files only
 	if (!file.originalname.match(/\.(xlsx|xls)$/i)) {
 		return cb(new Error('Only xlsx, xls files are allowed!'), false);
@@ -28,36 +28,36 @@ var xlsxFilter = function(req, file, cb) {
 var upload = multer({ storage: storage, fileFilter: xlsxFilter });
 
 //root route
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
 	res.render('api/api');
 });
 
-router.post('/', function(req, res) {
+router.post('/', function (req, res) {
 	res.render('api/api-success', { data: req.body });
 });
 
-router.get('/test', function(req, res) {
+router.get('/test', function (req, res) {
 	var itemp = res.render('api/test');
 });
 
-router.post('/test', function(req, res) {
+router.post('/test', function (req, res) {
 	res.render('api/test', { data: data });
 });
 
 var username = 'Default Username';
-router.get('/ajax', function(req, res) {
+router.get('/ajax', function (req, res) {
 	res.render('api/ajax', { username: username });
 });
 
-router.post('/ajax', function(req, res, next) {
+router.post('/ajax', function (req, res, next) {
 	res.render('api/ajax', { username: username });
 });
 
-router.get('/xlsx', middleware.isLoggedIn, function(req, res) {
+router.get('/xlsx', middleware.isLoggedIn, function (req, res) {
 	res.render('api/xlsx');
 });
 
-router.post('/xlsx', middleware.isLoggedIn, upload.single('xlsx'), function(req, res) {
+router.post('/xlsx', middleware.isLoggedIn, upload.single('xlsx'), function (req, res) {
 	var local_filename = req.file.filename;
 
 	var wbook = xlsx.parse(fs.readFileSync('/tmp/keyclue-upload/' + local_filename));
@@ -73,11 +73,11 @@ router.post('/xlsx', middleware.isLoggedIn, upload.single('xlsx'), function(req,
 	});
 });
 
-router.get('/upload', function(req, res) {
+router.get('/upload', function (req, res) {
 	res.render('api/upload');
 });
 
-router.post('/uploads', function(req, res) {
+router.post('/uploads', function (req, res) {
 	//console.log(req.files);
 
 	var files = req.files.file;
@@ -92,11 +92,11 @@ router.post('/uploads', function(req, res) {
 	res.send();
 });
 
-router.get('/modify', function(req, res) {
+router.get('/modify', function (req, res) {
 	res.render('api/modify');
 });
 
-router.post('/modify', function(req, res) {
+router.post('/modify', function (req, res) {
 	res.render('api/modify');
 });
 
@@ -116,10 +116,33 @@ router.post('/modify', function(req, res) {
 	res.send(req.query.callback + '('+ JSON.stringify(obj) + ');');
 });*/
 
-router.all('/endpoint', function(req, res) {
+router.all('/endpoint', function (req, res) {
 	var obj = {};
 	console.log('body: ' + JSON.stringify(req.body));
 	res.send(req.body);
+});
+
+let data = [{ item: "Get milk" }, { item: "Walk dog" }, { item: "Clean kitchen" }];
+
+let bodyParser = require("body-parser");
+let jsonParser = bodyParser.json();
+let urlencodedParser = bodyParser.urlencoded({ extended: false });
+
+//Handle get data requests
+router.get("/todo", function (req, res) {
+	res.render("api/todo", { todos: data });
+});
+
+//Handle post data requests (add data)
+router.post("/todo", urlencodedParser, function (req, res) {
+	console.log(req.body);
+	data.push(req.body);
+	res.render("api/todo", { todos: data });
+});
+
+//Handle delete data requests
+router.delete("/todo", function (req, res) {
+
 });
 
 module.exports = router;

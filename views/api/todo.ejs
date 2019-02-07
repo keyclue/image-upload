@@ -1,5 +1,4 @@
 <% include ../partials/header %>
-<% include ../partials/sheetjs %>
 <br>
 <h1>Drag and Drop Uploader</h1>
 <div class="jumbotron" id="drop">
@@ -30,7 +29,27 @@
 		</div>
 		<p id="csvbtn" class="btn">Flash required for actually downloading the generated file.</p>
 	</div>
+	<br>
+	<div style="width: 30%; margin: 25px auto;">
+		<form action="todo" method="post">
+			<div class="form-group">
+				<input class="form-control " id="item" type="text" Placeholder="Add new item..." name="item" />
+			</div>
+			<div class="form-goup">
+				<input class="btn btn-outline-secondary btn-block" type="submit" name="submit" value="POST">
+			</div>
+		</form>
+		<div id="todo-table">
+			<ul>
+				<% todos.forEach(todoList =>{ %>
+				<li>
+					<%= todoList.item %>
+				</li>
+				<% }) %>
+			</ul>
+		</div>
+	</div>
 </div>
-<% include ../partials/scripts %>
 <script type="text/javascript" src="/scripts/xlsx-util.js"></script>
+<% include ../partials/scripts %>
 <% include ../partials/footer %>
