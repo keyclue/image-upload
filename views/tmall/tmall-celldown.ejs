@@ -1,0 +1,23 @@
+<% include ../partials/header %>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+<div class="container">
+    <div >
+        <h1 style="text-align: center">해관신청용 엑셀시트 다운로드</h1>
+        <div style="width: 30%; margin: 25px auto;">
+            <form action="/tmall/celldown" method="post">
+                <div class="form-group">
+                    <input class="form-control" type="text" name="brandName" placeholder="Brand name">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Download Excell sheet</button>
+                </div>
+            </form>
+
+
+
+            <a href="/">Go Back</a>
+        </div>
+    </div>
+</div>
+
+<% include ../partials/footer %>
