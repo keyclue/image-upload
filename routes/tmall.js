@@ -11,8 +11,9 @@ var middleware = require('../middleware');
 var json2xls = require('json2xls');
 var mongoose = require("mongoose");
 var mongoXlsx = require('mongo-xlsx');
+var arraysort = require('array-sort');
 
-var ApiClient = require('top-sdk').ApiClient;
+var ApiClient = require('taobao-sdk').ApiClient;
 
 var client = new ApiClient({
 	appkey: process.env.TMALL_API_KEY,
@@ -142,13 +143,20 @@ router.post("/orders", function (req, res) {
 	var arrData = [];
 	var splitInfo = [];
 
+	function compare(a, b, column) {
+		if (a.column < b.column)
+			return -1;
+		if (a.column > b.column)
+			return 1;
+		return 0;
+	}
 
 	client.execute('taobao.trades.sold.get', {
 		'session': process.env.TMALL_SESSION,
-		'fields': 'tid,num_iid,receiver_state,title,orders.oid,orders.num_iid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,num,has_seller_memo,has_buyer_message,seller_flag',
+		'fields': 'tid,num_iid,receiver_state,title,orders.oid,orders.num_iid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,orders.num,orders.refund_status,has_seller_memo,has_buyer_message,seller_flag',
 		'start_created': date_startReplace, // datepicker start
 		'end_created': date_endReplace, //datepicker end
-		//		'status': 'WAIT_BUYER_CONFIRM_GOODS',
+		//		'status': "WAIT_SELLER_SEND_GOODS",
 		'type': 'tmall_i18n'
 	}, function (error, response) {
 		var total_results = response.total_results;
@@ -162,17 +170,16 @@ router.post("/orders", function (req, res) {
 				res.render('tmall/tmall-orders-success', { table: table });
 			}
 			Trades.forEach(function (Trade) {
-				if (Trade.orders) {
+				if (Trade.orders && Trade.pay_time) {
 					client.execute('taobao.trade.get', {
 						'session': process.env.TMALL_SESSION,
 						'fields': 'seller_memo,buyer_message',
 						'tid': Trade.tid
 					}, function (error, response) {
-						console.log('pos t', response);
-						var orders_Memo = response.trade;
 						if (!error) {
+							var orders_Memo = response.trade;
 							Orders = Trade.orders.order;
-							num_items = Orders.length;
+							var num_items = Orders.length;
 							console.log(num_items);
 							var index1 = 0;
 							Orders.forEach((Order) => {
@@ -188,56 +195,66 @@ router.post("/orders", function (req, res) {
 											'product_id': response.item.product_id
 										}, function (error, response) {
 											if (!error) {
-												console.log('pos 4 ', index, Order.num_iid);
+												var order_num = JSON.stringify(Order.oid);
+												console.log(order_num)
 												var temp = {
-													"고객ID": Trade.buyer_nick,
 													"주문날짜": Trade.pay_time,
-													"주문번호": Order.oid,
+													"매장": Trade.title,
+													"주문번호": order_num,
+													"고객ID": Trade.buyer_nick,
 													"결제시간": Trade.pay_time,
 													"수취인": Trade.receiver_name,
 													"핸드폰번호": Trade.receiver_mobile,
 													"우편번호": Trade.receiver_zip,
-													"수취정보": Trade.receiver_state + Trade.receiver_city + Trade.receiver_district + Trade.receiver_address,
+													"수취인주소": Trade.receiver_state + Trade.receiver_city + Trade.receiver_district + Trade.receiver_address,
 													"SKU": Order.outer_sku_id,
 													"상품명": Order.title,
-													"단가": Trade.payment,
-													"USD 가격": Trade.payment / 7,
-													"개수": Trade.num,
+													"가격": Trade.payment,
+													"USD 가격": (Trade.payment / 7.00).toFixed(2),
+													"개수": Order.num,
 													"물류회사": "",
 													"송장번호": "",
 													"브랜드": "",
+													"구매자요청": "",
 													"등록시간": "",
 													"발송시간": "",
 													"판매자메모": "",
-													"구매자요청": ""
+													"합배송": "",
+													"환불상태": ""
 												};
-												if (Trade.payment >= 2000) {
-													temp.물류회사 = "EMS";
-												}
-												else temp.물류회사 = "CAINIAO";
-												if (orders_Memo.seller_memo) {
-													temp.판매자메모 = orders_Memo.seller_memo;
-												}
-												if (orders_Memo.buyer_message) {
-													temp.구매자요청 = orders_Memo.buyer_message;
-												}
+											}
+											if (num_items > 1) {
+												temp.합배송 = '동일고객합배송';
+											}
+											if (Trade.payment >= 5000) {
+												temp.물류회사 = "EMS";
+											}
+											else temp.물류회사 = "ICB";
+											if (orders_Memo.seller_memo) {
+												temp.판매자메모 = orders_Memo.seller_memo;
+											}
+											if (orders_Memo.buyer_message) {
+												temp.구매자요청 = orders_Memo.buyer_message;
+											}
+											if (Order.refund_status === "SUCCESS") {
+												temp.환불상태 = "환불"
+											}
 
-												brand = response.product.props_str;
-												brand = brand.replace(';', '","');
-												brand = brand.replace('货号:', '货号":"');
-												brand = brand.replace('品牌:', '品牌":"');
-												Props = JSON.parse('{"' + brand + '"}');
-												brand = Props.品牌;
-												temp.브랜드 = brand;
+											brand = response.product.props_str;
+											brand = brand.replace(';', '","');
+											brand = brand.replace('货号:', '货号":"');
+											brand = brand.replace('品牌:', '品牌":"');
+											Props = JSON.parse('{"' + brand + '"}');
+											brand = Props.品牌;
+											temp.브랜드 = brand;
 
-												arrData.push(temp);
-												index1++;
-												if (index1 === num_items) {
-													index++;
-													if (index === total_results) {
-														console.log('pos 4 ', index, index1);
-														renderOrderInfo();
-													}
+											arrData.push(temp);
+											index1++;
+											if (index1 === num_items) {
+												index++;
+												if (index === total_results) {
+													arraysort(arrData, '주문날짜', '고객ID');
+													renderOrderInfo();
 												}
 											}
 											else {

@@ -11,6 +11,7 @@
 	"author": "Colt Steele",
 	"license": "ISC",
 	"dependencies": {
+		"array-sort": "^1.0.0",
 		"body-parser": "^1.18.3",
 		"bootstrap-vue": "^2.0.0-rc.11",
 		"cloudinary": "^1.13.2",
