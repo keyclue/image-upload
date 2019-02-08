@@ -1,0 +1,18 @@
+<% include ../partials/header %>
+<h1 style="text-align: center">Upload CSV File</h1>
+<div style="width: 30%; margin: 25px auto;">
+    <form action="/api/csv" method="POST">
+        <div class="form-group">
+            <label for="Excel">CSV File</label>
+            <input type="file" id="csvFilePath" name="csvFilePath" required>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-outline-secondary btn-block">Submit!</button>
+        </div>
+    </form>
+    <br>
+    <a href="/api"><button class="btn btn-outline-secondary btn-block">Go Back</button></a>
+</div>
+
+<% include ../partials/scripts %>
+<% include ../partials/footer %>

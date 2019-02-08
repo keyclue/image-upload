@@ -160,7 +160,8 @@ router.post("/orders", function (req, res) {
 		'type': 'tmall_i18n'
 	}, function (error, response) {
 		var total_results = response.total_results;
-		console.log(total_results);
+		//console.log(total_results, response);
+
 		if (!error && total_results != 0) {
 			var Trades = response.trades.trade;
 			var index = 0;
@@ -169,6 +170,7 @@ router.post("/orders", function (req, res) {
 				//				console.log(arrData);
 				res.render('tmall/tmall-orders-success', { table: table });
 			}
+			//			console.log(Trades);
 			Trades.forEach(function (Trade) {
 				if (Trade.orders && Trade.pay_time) {
 					client.execute('taobao.trade.get', {
@@ -180,7 +182,7 @@ router.post("/orders", function (req, res) {
 							var orders_Memo = response.trade;
 							Orders = Trade.orders.order;
 							var num_items = Orders.length;
-							console.log(num_items);
+							//							console.log(index, Orders);
 							var index1 = 0;
 
 							Orders.forEach((Order) => {
@@ -192,9 +194,7 @@ router.post("/orders", function (req, res) {
 									'page_size': '40'
 								}, function (error, response) {
 									if (!error) {
-										//									console.log(response);
 										order_code = response.shippings.shipping[0].order_code;
-										console.log(order_code);
 										client.execute('taobao.item.seller.get', { //product_id 가져오기
 											'session': process.env.TMALL_SESSION,
 											'fields': 'product_id',
@@ -207,12 +207,10 @@ router.post("/orders", function (req, res) {
 													'product_id': response.item.product_id
 												}, function (error, response) {
 													if (!error) {
-														var order_num = JSON.stringify(Order.oid);
-														console.log(order_num)
 														var temp = {
 															"주문날짜": Trade.pay_time,
 															"매장": Trade.title,
-															"주문번호": order_num,
+															"주문번호": Trade.tid,
 															"고객ID": Trade.buyer_nick,
 															"결제시간": Trade.pay_time,
 															"수취인": Trade.receiver_name,
@@ -264,7 +262,6 @@ router.post("/orders", function (req, res) {
 														index1++;
 														if (index1 === num_items) {
 															index++;
-															console.log(index, index1, temp)
 															if (index === total_results) {
 																arraysort(arrData, '주문날짜', '고객ID');
 																renderOrderInfo();
@@ -286,17 +283,12 @@ router.post("/orders", function (req, res) {
 													index++;
 												}
 												console.log('item.seller.get error', index, error);
-												console.log(Trade);
 											}
 										});
 									}
 									else console.log('logistics.get err', error);
 								})
 							});
-
-
-
-
 						}
 						else {
 							index++
@@ -320,7 +312,6 @@ router.post("/orders", function (req, res) {
 		}
 	});
 });
-
 
 router.get("/celldown", function (req, res) {
 	res.render("tmall/tmall-celldown");
@@ -586,7 +577,6 @@ router.post("/celldown", function (req, res) {
 						}
 						//console.log(arrData);
 					}
-
 					else console.log(error);
 				}
 				)
@@ -712,9 +702,7 @@ router.post("/celldown", function (req, res) {
 				mongoXlsx.mongoData2Xlsx(arrData, model3, function (err, data) {
 					console.log('File saved at:', data.fullPath);
 				});
-
 			}, 3000);
-
 		}
 		else console.log(error);
 	}

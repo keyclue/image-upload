@@ -144,5 +144,26 @@ router.post("/todo", urlencodedParser, function (req, res) {
 router.delete("/todo", function (req, res) {
 
 });
+// require csvtojson
+var csv = require("csvtojson");
+
+router.get("/csv", function (req, res) {
+	console.log(req.body);
+	res.render("api/csv");
+});
+
+// Convert a csv file with csvtojson
+router.post("/csv", function (req, res) {
+	console.log(req.body);
+	var csvFilePath = req.body.csvFilepath;
+	var jsonArrayObject = [];
+	csv()
+		.fromFile(csvFilePath)
+		.then(function (jsonArrayObject) { //when parse finished, result will be emitted here.
+			console.log(jsonArrayObject);
+		})
+
+	res.render("api/csv", { array: jsonArrayObject });
+});
 
 module.exports = router;
