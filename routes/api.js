@@ -3,6 +3,7 @@ var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
 var xlsx = require('node-xlsx');
+var XLSX = require('xlsx');
 var request = require('request');
 var fs = require('fs');
 var multer = require('multer');
@@ -10,22 +11,33 @@ var tableify = require('tableify');
 var middleware = require('../middleware');
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
-		cb(null, '/tmp/keyclue-upload');
+		cb(null, '/tmp/uploads');
 	},
 	filename: function (req, file, callback) {
-		callback(null, Date.now() + file.originalname);
+		callback(null, file.originalname);
 	}
 });
-xlsxj = require('xlsx-2-json');
+
+
+var memory_storage = multer.memoryStorage()
+var upload = multer({ storage: memory_storage })
 
 var xlsxFilter = function (req, file, cb) {
-	// accept image files only
 	if (!file.originalname.match(/\.(xlsx|xls)$/i)) {
 		return cb(new Error('Only xlsx, xls files are allowed!'), false);
 	}
 	cb(null, true);
 };
-var upload = multer({ storage: storage, fileFilter: xlsxFilter });
+var upload_xlsx = multer({ storage: storage, fileFilter: xlsxFilter });
+
+var csvFilter = function (req, file, cb) {
+	if (!file.originalname.match(/\.(csv)$/i)) {
+		return cb(new Error('Only csv files are allowed!'), false);
+	}
+	cb(null, true);
+};
+
+var upload_csv = multer({ storage: memory_storage, fileFilter: csvFilter });
 
 //root route
 router.get('/', function (req, res) {
@@ -53,25 +65,11 @@ router.post('/ajax', function (req, res, next) {
 	res.render('api/ajax', { username: username });
 });
 
-router.get('/xlsx', middleware.isLoggedIn, function (req, res) {
+router.get('/xlsx', /*middleware.isLoggedIn,*/function (req, res) {
 	res.render('api/xlsx');
 });
 
-router.post('/xlsx', middleware.isLoggedIn, upload.single('xlsx'), function (req, res) {
-	var local_filename = req.file.filename;
 
-	var wbook = xlsx.parse(fs.readFileSync('/tmp/keyclue-upload/' + local_filename));
-	console.log(wbook);
-	var htmltable = tableify(wbook[0].data);
-
-	res.render('api/xlsx-success', {
-		filename: req.file.filename,
-		description: req.file.description,
-		sheetname: wbook[0].name,
-		data: wbook[0].data,
-		table: htmltable
-	});
-});
 
 router.get('/upload', function (req, res) {
 	res.render('api/upload');
@@ -144,26 +142,69 @@ router.post("/todo", urlencodedParser, function (req, res) {
 router.delete("/todo", function (req, res) {
 
 });
-// require csvtojson
-var csv = require("csvtojson");
 
-router.get("/csv", function (req, res) {
-	console.log(req.body);
-	res.render("api/csv");
+router.post('/xlsx',/*middleware.isLoggedIn,*/ upload.single('xlsx'), function (req, res) {
+	console.log(req.file)
+	var local_filename = req.file.filename;
+
+	//	var wbook = xlsx.parse(fs.readFileSync('/tmp/uploads/' + local_filename));
+	var buffer = req.file.buffer;
+	var wb = XLSX.read(buffer, { type: 'buffer' });
+	//	var wb = XLSX.readFile(/*'/tmp/uploads/' + local_filename*/xlsx);
+	var data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, range: 0, defval: "" });
+	//	console.log(data);
+	var htmltable = tableify(data);
+
+	res.render('api/xlsx-success', {
+		filename: req.file.filename,
+		description: req.file.description,
+		sheetname: wb.SheetNames[0],
+		data: data,
+		table: htmltable
+	});
+});
+// require csvtojson
+let csv = require('fast-csv');
+var mongoose = require('mongoose');
+var Author = require('../models/author');
+
+router.get('/csv', function (req, res) {
+	var authors = [];
+	res.render('api/csv', { authors: authors });
 });
 
+var iconv = require('iconv-lite');
 // Convert a csv file with csvtojson
-router.post("/csv", function (req, res) {
-	console.log(req.body);
-	var csvFilePath = req.body.csvFilepath;
-	var jsonArrayObject = [];
-	csv()
-		.fromFile(csvFilePath)
-		.then(function (jsonArrayObject) { //when parse finished, result will be emitted here.
-			console.log(jsonArrayObject);
-		})
+router.post('/csv',/*middleware.isLoggedIn,*/ upload_csv.single('csv'), function (req, res) {
+	//console.log(req.file)
+	if (!req.file)
+		return res.status(400).send('No files were uploaded.');
 
-	res.render("api/csv", { array: jsonArrayObject });
+	//	var local_filename = req.file.filename;
+	var buffer = req.file.buffer;
+
+	var decodefile = iconv.decode(buffer, 'EUC-KR')
+	console.log(buffer, decodefile)
+	var stocks = [];
+	csv
+		.fromString(decodefile.toString(), {
+			headers: true,
+			ignoreEmpty: false
+		})
+		.on("data", function (data) {
+			data['_id'] = new mongoose.Types.ObjectId();
+
+			stocks.push(data);
+			console.log(data);
+		})
+		.on("end", function () {
+			Author.create(stocks, function (err, documents) {
+				if (err) throw err;
+			});
+			console.log(stocks)
+			res.send(stocks.length + ' Stock info have been successfully uploaded.');
+		});
 });
 
 module.exports = router;
+

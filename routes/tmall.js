@@ -143,14 +143,6 @@ router.post("/orders", function (req, res) {
 	var arrData = [];
 	var splitInfo = [];
 
-	function compare(a, b, column) {
-		if (a.column < b.column)
-			return -1;
-		if (a.column > b.column)
-			return 1;
-		return 0;
-	}
-
 	client.execute('taobao.trades.sold.get', {
 		'session': process.env.TMALL_SESSION,
 		'fields': 'tid,num_iid,receiver_state,title,orders.oid,orders.num_iid,buyer_nick,pay_time,receiver_name,receiver_mobile,receiver_zip,receiver_city,receiver_district,receiver_address,orders.outer_sku_id,orders.title,payment,orders.num,orders.refund_status,has_seller_memo,has_buyer_message,seller_flag',

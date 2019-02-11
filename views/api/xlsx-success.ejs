@@ -1,15 +1,23 @@
 <% include ../partials/header %>
+<% include ../partials/sheetjs %>
 <div class="container">
-    <div style="width: 30%; margin: 25px auto;">
-        <div class="row">
+    <div style="mx-auto;">
+        <div class="jumbotron">
             <h1 style="text-align: center">Excel File Loaded</h1>
-            <br>
-            <p>Filename:<%= filename %><p>
-            <p>Sheetname:<%=sheetname %></p>
-            <p>Data: <%= data %></p>   
         </div>
-        <%= table %>
+        <p>Filename:
+            <%= filename %>
+        </p>
+        <p>Sheetname:
+            <%=sheetname %>
+        </p>
+        <div id="data-table" class="no-more-tables" contenteditable='true'>
+            <%- table %>
+        </div>
+        <br>
         <a href="/api/xlsx"><button class="btn btn-outline-secondary btn-block">Go Back</button></a>
     </div>
 </div>
+<% include ../partials/scripts %>
+<script type="text/javascript" src="/scripts/xlsx-util.js"></script>
 <% include ../partials/footer %>

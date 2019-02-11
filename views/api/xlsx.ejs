@@ -1,25 +1,22 @@
 <% include ../partials/header %>
-    <div class="row">
-        <h1 style="text-align: center">Upload Excel File</h1>
-        <div style="width: 30%; margin: 25px auto;">
-            <form action="xlsx" method="POST" enctype="multipart/form-data" >
-                <div class="form-group">
-                    <input class="form-control" type="text" name="filename" placeholder="file name">
-                </div>
-                <div class="form-group">
-                    <label for="Excel">Excel File</label>
-                    <input type="file" id="xlsx" name="xlsx" required>
-                </div>
-                <div class="form-group">
-                    <input class="form-control" type="text" name="description" placeholder="description">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-outline-secondary btn-block">Submit!</button>
-                </div>
-            </form>
-            <br>
-            <a href="/api"><button class="btn btn-outline-secondary btn-block">Go Back</button></a>
+<% include ../partials/sheetjs %>
+<h1 style="text-align: center">Upload Excel File</h1>
+<div style="width: 30%; margin: 25px auto;">
+    <form action="xlsx" method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="Excel">Excel File</label>
+            <input type="file" id="xlsx" name="xlsx" accept=".xlsx" required>
         </div>
-    </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="description" placeholder="description">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-outline-secondary btn-block">Submit!</button>
+        </div>
+    </form>
+    <br>
+    <a href="/api"><button class="btn btn-outline-secondary btn-block">Go Back</button></a>
+</div>
+
 <% include ../partials/scripts %>
 <% include ../partials/footer %>
