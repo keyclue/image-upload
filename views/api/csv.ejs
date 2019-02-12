@@ -1,24 +1,45 @@
 <% include ../partials/header %>
 <% include ../partials/sheetjs %>
-<div class=container>
-    < <div class="jumbotron">
+<div class=container-fluid>
+    <div class="jumbotron">
         <h1 style="text-align: center">Upload CSV File</h1>
-</div>
+    </div>
+    <p>Filename:
+        <%- filename %>
+    </p>
+    <div id="datatable" class="no-more-tables" contenteditable='true'>
+        <%- datatable %>
+    </div>
+    <br>
 
-<div style="width: 30%; margin: 25px auto;">
-    <form action="csv" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="Excel">CSV File</label>
-            <input type="file" id="csv" name="csv" accept=".csv" required>
+    <div style="width: 30%; margin: 25px auto;">
+        <form action="csv" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="Excel">CSV File</label>
+                <input type="file" id="csv" name="csv" accept=".csv" required>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="text" name="description" placeholder="description">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-outline-secondary btn-block">Submit!</button>
+            </div>
+        </form>
+    </div>
+    <nav class="navbar nav-bottom navbar-expand-sm navbar-light bg-light">
+        <div class="mx-auto">
+            <!--           <div class="form-goup" id="xportxlsx">  -->
+            <input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to XLSX!"
+                onclick="doit('xlsx', '재고관리.xlsx');">
+            <!--            </div>  -->
+            <a href="/tmall/orders"><button class="btn btn-outline-secondary">티몰오더보기</button></a>
+            <a href="/tmall/item"><button class="btn btn-outline-secondary">티몰 제품관리</button></a>
+            <a href="/tmall/search"><button class="btn btn-outline-secondary">티몰 제품검색</button></a>
+            <a href="/tmall"><button class="btn btn-outline-secondary">티몰 홈</button></a>
+            <a href="/api"><button class="btn btn-outline-secondary">관리 홈</button></a>
         </div>
-        <div class="form-group">
-            <input class="form-control" type="text" name="description" placeholder="description">
-        </div>
-        <div class="form-group">
-            <button class="btn btn-outline-secondary btn-block">Submit!</button>
-        </div>
-    </form>
-</div>
+    </nav>
 </div>
 <% include ../partials/scripts %>
+<script type="text/javascript" src="/scripts/xlsx-util.js"></script>
 <% include ../partials/footer %>

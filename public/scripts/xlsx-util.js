@@ -1,5 +1,5 @@
 function doit(type, fn, dl) {
-  var elt = document.getElementById('data-table');
+  var elt = document.getElementById('datatable');
   //  var fn = document.getElementById('filename') + (type || 'xlsx');
   console.log(fn);
   var wb = XLSX.utils.table_to_book(elt, { sheet: "Sheet JS" });
@@ -37,9 +37,9 @@ function fixdata(data) {
 }
 function process_wb(wb) {
   console.log(wb);
-  var o = XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]], { editable: true }).replace("<table", '<table id="data-table" border="1"')
+  var o = XLSX.utils.sheet_to_html(wb.Sheets[wb.SheetNames[0]], { editable: true }).replace("<table", '<table id="datatable" border="1"')
   spinner.stop();
-  document.getElementById('data-table').outerHTML = o;
+  document.getElementById('datatable').outerHTML = o;
   pending = false;
 }
 var drop = document.getElementById('drop');

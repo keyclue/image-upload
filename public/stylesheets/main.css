@@ -18,12 +18,12 @@ a {
 	text-decoration: none;
 }
 
-#data-table{
+#datatable{
 	margin-left:auto; 
     margin-right:auto;
 }
-#data-table th,
-#data-table td {
+#datatable th,
+#datatable td {
 	border: 1px solid #bbb;
 	font-size:12px !important;
 }
