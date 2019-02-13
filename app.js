@@ -22,6 +22,7 @@ var commentRoutes = require('./routes/comments'),
 	apiRoutes = require('./routes/api'),
 	adminRoutes = require('./routes/admin'),
 	cafe24Routes = require('./routes/cafe24'),
+	uploadRoutes = require('./routes/upload'),
 	tmallRoutes = require('./routes/tmall');
 
 mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true });
@@ -73,6 +74,7 @@ app.use('/api', apiRoutes);
 app.use('/tmall', tmallRoutes);
 app.use('/cafe24', cafe24Routes);
 app.use('/admin', adminRoutes);
+app.use('/upload', uploadRoutes);
 
 var dropzoneRoutes = require('./routes/dropzone');
 app.use('/dropzone', dropzoneRoutes);

@@ -242,10 +242,12 @@ router.post("/orders", function (req, res) {
 															temp.환불상태 = "환불"
 														}
 
+														console.log(response.product)
 														brand = response.product.props_str;
 														brand = brand.replace(';', '","');
 														brand = brand.replace('货号:', '货号":"');
 														brand = brand.replace('品牌:', '品牌":"');
+														brand = brand.replace('款号:', '款号":"');
 														Props = JSON.parse('{"' + brand + '"}');
 														brand = Props.品牌;
 														temp.브랜드 = brand;
