@@ -19,3 +19,4 @@ mongoose.connect(uristring, { useNewUrlParser: true }, function (err, res) {
       console.log('Succeeded connected to: ' + uristring);
    }
 });
+//test
