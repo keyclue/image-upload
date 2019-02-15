@@ -155,8 +155,42 @@ router.post('/xlsx',/*middleware.isLoggedIn,*/ upload_xlsx.single('xlsx'), funct
 	// Upload to local file
 	var wb = XLSX.readFile('/tmp/uploads/' + local_filename);
 	var data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, range: 0, defval: "" });
-
+	console.log("asdf");
+	console.log("here is1 "+ typeof(data));
+	console.log(data);
+	console.log(JSON.stringify(data));
 	var htmltable = tableify(data);
+
+	var Darr = [];
+
+	for(var x in data){
+	  Darr.push(data[x]);
+	}
+
+	// var tpd = {"a":"123", "b":"2142"};
+	// var tpd2 = {"a":"1423", "b":"2131"};
+
+	// Darr.push(tpd);
+	// Darr.push(tpd2);
+
+
+	//DB에 저장하는 부분
+// setTimeout(function(){},3000); 
+			mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true } ,function(err,db){
+			if(err){
+			console.log(err);
+			}else{
+			//console.log(arrData);
+			try{
+				console.log("here is "+ typeof(Darr));
+				db.collection('test123').insertMany(Darr);
+				//db.collection('testabc').insertOne(tempdata);
+			} 
+			catch(e){console.log(e);}
+			db.close();
+			}
+		});
+
 
 	res.render('api/xlsx-success', {
 		filename: req.file.filename,
