@@ -19,7 +19,6 @@ var storage = multer.diskStorage({
 	}
 });
 
-
 var memory_storage = multer.memoryStorage()
 var upload = multer({ storage: memory_storage })
 
@@ -69,8 +68,6 @@ router.post('/ajax', function (req, res, next) {
 router.get('/xlsx', /*middleware.isLoggedIn,*/function (req, res) {
 	res.render('api/xlsx');
 });
-
-
 
 router.get('/upload', function (req, res) {
 	res.render('api/upload');
@@ -144,10 +141,14 @@ router.delete("/todo", function (req, res) {
 
 });
 
+/*
+Upload Excell File
+brandname으로 입력한 collection에 데이터를 저장함
+*/
 router.post('/xlsx',/*middleware.isLoggedIn,*/ upload_xlsx.single('xlsx'), function (req, res) {
 	console.log(req.file)
 	var local_filename = req.file.filename;
-
+	var brand = req.body.brandname;
 	//	Upload to buffer 
 	//	var buffer = req.file.buffer;
 	//	var wb = XLSX.read(buffer, { type: 'buffer' });
@@ -155,42 +156,81 @@ router.post('/xlsx',/*middleware.isLoggedIn,*/ upload_xlsx.single('xlsx'), funct
 	// Upload to local file
 	var wb = XLSX.readFile('/tmp/uploads/' + local_filename);
 	var data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], { header: 1, range: 0, defval: "" });
-	console.log("asdf");
-	console.log("here is1 "+ typeof(data));
-	console.log(data);
-	console.log(JSON.stringify(data));
-	var htmltable = tableify(data);
+	console.log(local_filename);
+	//console.log(data);
+	//console.log(wb.Sheets);
 
 	var Darr = [];
-
-	for(var x in data){
-	  Darr.push(data[x]);
+	for(var i in data){
+		if(i!=0){
+			var tdata = {
+				"SPU": data[i][0],
+				"SKU": data[i][1],
+				"브랜드品牌": data[i][2], //Brand명
+				"상품명商品名":data[i][3],
+				"바코드":data[i][4],
+				"라벨가吊牌价":data[i][5],
+				"판매가售价":data[i][6],
+				"적응 고객客户群":data[i][7],
+				"카테고리类目":data[i][8],
+				"사이즈尺寸":data[i][9],
+				"색상颜色":data[i][10],
+				"재고库存":data[i][11],
+				"소재材质":data[i][12],
+				"HSCODE": data[i][13],
+				"생산지产地":data[i][14],
+				"중량（kg）重量":data[i][15],
+				"세탁 방식洗涤方法":data[i][16],
+				"ICB배송비":data[i][17],
+				"ICB판매가": data[i][18],
+			}
+			Darr.push(tdata);
+		}
 	}
 
-	// var tpd = {"a":"123", "b":"2142"};
-	// var tpd2 = {"a":"1423", "b":"2131"};
+	//for mlab table view
+	// {
+	// 	"SPU": "SPU",
+	// 	"SKU": "SKU",
+	// 	"브랜드品牌": "브랜드品牌", 
+	// 	"상품명商品名":"상품명商品名",
+	// 	"바코드":"바코드",
+	// 	"라벨가吊牌价":"라벨가吊牌价",
+	// 	"판매가售价":"판매가售价",
+	// 	"적응 고객客户群":"적응 고객客户群",
+	// 	"카테고리类目":"카테고리类目",
+	// 	"사이즈尺寸":"사이즈尺寸",
+	// 	"색상颜色":"색상颜色",
+	// 	"재고库存":"재고库存",
+	// 	"소재材质":"소재材质",
+	// 	"HSCODE": "HSCODE",
+	// 	"생산지产地":"생산지产地",
+	// 	"중량（kg）重量":"중량（kg）重量",
+	// 	"세탁 방식洗涤方法":"세탁 방식洗涤方法",
+	// 	"ICB배송비":"ICB배송비",
+	// 	"ICB판매가":"ICB판매가" ,
+	// }
 
-	// Darr.push(tpd);
-	// Darr.push(tpd2);
 
+	//console.log(Darr);
+	//console.log(JSON.stringify(data));
+	var htmltable = tableify(data);
 
 	//DB에 저장하는 부분
-// setTimeout(function(){},3000); 
-			mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true } ,function(err,db){
-			if(err){
+	mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true } ,function(err,db){
+		if(err){
 			console.log(err);
-			}else{
+		}else{
 			//console.log(arrData);
 			try{
 				console.log("here is "+ typeof(Darr));
-				db.collection('test123').insertMany(Darr);
+				db.collection(brand).insertMany(Darr);
 				//db.collection('testabc').insertOne(tempdata);
 			} 
 			catch(e){console.log(e);}
 			db.close();
-			}
-		});
-
+		}
+	});
 
 	res.render('api/xlsx-success', {
 		filename: req.file.filename,
@@ -200,6 +240,7 @@ router.post('/xlsx',/*middleware.isLoggedIn,*/ upload_xlsx.single('xlsx'), funct
 		table: htmltable
 	});
 });
+
 // require csvtojson
 let csv = require('fast-csv');
 var mongoose = require('mongoose');

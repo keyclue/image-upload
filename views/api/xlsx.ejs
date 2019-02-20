@@ -1,12 +1,15 @@
 <% include ../partials/header %>
 <% include ../partials/sheetjs %>
-<h1 style="text-align: center">Upload Excel File</h1>
+<h1 style="text-align: center">Upload Excell File</h1>
 <div style="width: 30%; margin: 25px auto;">
     <form action="xlsx" method="POST" enctype="multipart/form-data">
         <div class="form-group">
             <label for="Excel">Excel File</label>
             <input type="file" id="xlsx" name="xlsx" accept=".xlsx" required>
         </div>
+        <div class="form-group">
+            <input class="form-control" type="text" name="brandname" placeholder="brandname">
+        <br>
         <div class="form-group">
             <input class="form-control" type="text" name="description" placeholder="description">
         </div>
