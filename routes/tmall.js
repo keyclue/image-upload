@@ -310,7 +310,7 @@ router.post("/orders", function (req, res) {
 //brandList를 업데이트하기위한 코드
 router.get("/cellupdate", function(req, res){
 	client.execute('taobao.sellercats.list.get', {
-	  'session' : '610112705e986a0941348b0a68bad97b5001bcd30cbc0f13031625218',
+	  'session' : process.env.TMALL_SESSION,
 	  'nick':'keyclue海外旗舰店',
 	  'fields':'cid,name'
 	}, function(error, response) {
@@ -362,13 +362,13 @@ router.post("/celldown", function(req, res){
 			break;
 			}
 		}  
-			if(selectedCid == 0){
-			console.log("THERE IS NO BRAND")
-			exit(0);
-		 }
 
+		if(selectedCid == 0){
+			console.log("THERE IS NO BRAND")
+		}
+		else{
 		 client.execute('taobao.items.inventory.get', {
-			'session' : '610112705e986a0941348b0a68bad97b5001bcd30cbc0f13031625218',
+			'session' : process.env.TMALL_SESSION,
 			//'q':'j.gracelet', //q로 검색하면안되고 seller_cids로 해야함
 			'seller_cids': selectedCid,
 			//'banner':'never_on_shelf,regular_shelved, off_shelf, sold_out, violation_off_shelved',
@@ -397,7 +397,7 @@ router.post("/celldown", function(req, res){
 				
 				for(var j in arr){
 					client.execute('taobao.item.seller.get', {
-						'session' : '610112705e986a0941348b0a68bad97b5001bcd30cbc0f13031625218',
+						'session' : process.env.TMALL_SESSION,
 						'fields':'Property_alias,Type,input_str,num_iid,title,nick,price,approve_status,sku,outer_id,cid,num,item_weight,item_size',
 						'num_iid':arr[j],
 					}, function(error, response) {
@@ -584,6 +584,7 @@ router.post("/celldown", function(req, res){
 					else console.log(error);
 				}
 	)
+	}
 	});
 
 });

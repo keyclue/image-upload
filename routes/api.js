@@ -143,7 +143,32 @@ router.delete("/todo", function (req, res) {
 
 /*
 Upload Excell File
-brandname으로 입력한 collection에 데이터를 저장함
+
+Mlab에 데이터를 저장하는데
+brandname으로 입력한 이름의 collection에 데이터를 저장함
+mlab table view에 필요한 스키마
+	{
+		"SPU": "SPU",
+		"SKU": "SKU",
+		"브랜드品牌": "브랜드品牌", 
+		"상품명商品名":"상품명商品名",
+		"바코드":"바코드",
+		"라벨가吊牌价":"라벨가吊牌价",
+		"판매가售价":"판매가售价",
+		"적응 고객客户群":"적응 고객客户群",
+		"카테고리类目":"카테고리类目",
+		"사이즈尺寸":"사이즈尺寸",
+		"색상颜色":"색상颜色",
+		"재고库存":"재고库存",
+		"소재材质":"소재材质",
+		"HSCODE": "HSCODE",
+		"생산지产地":"생산지产地",
+		"중량（kg）重量":"중량（kg）重量",
+		"세탁 방식洗涤方法":"세탁 방식洗涤方法",
+		"ICB배송비":"ICB배송비",
+		"ICB판매가":"ICB판매가" ,
+	}
+
 */
 router.post('/xlsx',/*middleware.isLoggedIn,*/ upload_xlsx.single('xlsx'), function (req, res) {
 	console.log(req.file)
@@ -188,35 +213,11 @@ router.post('/xlsx',/*middleware.isLoggedIn,*/ upload_xlsx.single('xlsx'), funct
 		}
 	}
 
-	//for mlab table view
-	// {
-	// 	"SPU": "SPU",
-	// 	"SKU": "SKU",
-	// 	"브랜드品牌": "브랜드品牌", 
-	// 	"상품명商品名":"상품명商品名",
-	// 	"바코드":"바코드",
-	// 	"라벨가吊牌价":"라벨가吊牌价",
-	// 	"판매가售价":"판매가售价",
-	// 	"적응 고객客户群":"적응 고객客户群",
-	// 	"카테고리类目":"카테고리类目",
-	// 	"사이즈尺寸":"사이즈尺寸",
-	// 	"색상颜色":"색상颜色",
-	// 	"재고库存":"재고库存",
-	// 	"소재材质":"소재材质",
-	// 	"HSCODE": "HSCODE",
-	// 	"생산지产地":"생산지产地",
-	// 	"중량（kg）重量":"중량（kg）重量",
-	// 	"세탁 방식洗涤方法":"세탁 방식洗涤方法",
-	// 	"ICB배송비":"ICB배송비",
-	// 	"ICB판매가":"ICB판매가" ,
-	// }
-
-
 	//console.log(Darr);
 	//console.log(JSON.stringify(data));
 	var htmltable = tableify(data);
 
-	//DB에 저장하는 부분
+	//Mlab DB에 저장하는 부분
 	mongoose.connect(process.env.MONGO_DB_URI, { useNewUrlParser: true } ,function(err,db){
 		if(err){
 			console.log(err);
