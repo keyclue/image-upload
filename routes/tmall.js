@@ -408,7 +408,7 @@ router.post("/celldown", function(req, res){
 							var ri = response.item;
 							var rs = response.item.skus.sku;
 							// console.log(ri);
-							// console.log(rs);
+							 //console.log(rs);
 							//console.log("Brand name is " +req.body.brandName);
 							//sku숫자만큼 반복
 							for(var k in rs){
@@ -429,11 +429,11 @@ router.post("/celldown", function(req, res){
 									"SKU": rs[k].outer_id,
 									"SKU_ID": rs[k].sku_id,
 									"브랜드品牌": req.body.brandName,   //Brand명
-									"货品名称": 'test',   //Brand+카테고리+spu+색상+사이즈 13번
+									"货品名称": '',   //Brand+카테고리+spu+색상+사이즈 13번
 									"색상+사이즈": itemColor+itemSize, //14번
 									"재고": rs[k].quantity,
-									"소재":'test', //cid는 아는데 이걸로 소재 찾아와야함.
-									"HSCODE": 'test',
+									"소재":'', //cid는 아는데 이걸로 소재 찾아와야함.
+									"HSCODE": '',
 									"중량": ri.item_weight*1000,
 									"판매가": ri.price,
 									//text for 2번시트
@@ -470,7 +470,7 @@ router.post("/celldown", function(req, res){
 									var model1 = [ 
 										{ displayName: '宝贝id', access: 'SPU_ID', type: 'number' },  //spu_id
 										{ displayName: '宝贝标题', access: '货品名称', type: 'string' },  //hm
-										{ displayName: 'SKUid', access: 'SKUid', type: 'number' },  //sku_id
+										{ displayName: 'SKUid', access: 'SKU_id', type: 'number' },  //sku_id
 										{ displayName: 'SKU名称', access: '색상+사이즈', type: 'string' },  //hm
 										{ displayName: '宝贝当前库存', access: '재고', type: 'number' }, //재고 
 										{ displayName: '货品编码', access: 'SKU', type: 'string' },  //sku
