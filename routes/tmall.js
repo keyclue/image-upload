@@ -330,11 +330,11 @@ router.get("/cellupdate", function(req, res){
 			  }
 		  });
   
-		  //for test
-		  // fs.readFile('./routes/brandData/brand.txt', 'utf-8', function(error, data) {
-		  // 	var brandList = JSON.parse(data);
-		  // 	console.log("read : "+brandList);
-		  // });
+	// 	  //for test
+	// 	  // fs.readFile('./routes/brandData/brand.txt', 'utf-8', function(error, data) {
+	// 	  // 	var brandList = JSON.parse(data);
+	// 	  // 	console.log("read : "+brandList);
+	// 	  // });
 	}
 	  else console.log(error);
   });
@@ -407,6 +407,7 @@ router.post("/celldown", function(req, res){
 							//console.log(response.item.skus);
 							var ri = response.item;
 							var rs = response.item.skus.sku;
+							var linkbody = "https://detail.tmall.hk/hk/item.htm?id=";
 							// console.log(ri);
 							 //console.log(rs);
 							//console.log("Brand name is " +req.body.brandName);
@@ -445,7 +446,8 @@ router.post("/celldown", function(req, res){
 									"盒装":'盒装',
 									"韩国":'韩国',
 									"1":"1",
-									"035":"035"
+									"035":"035",
+									"link":linkbody+ri.num_iid
 								};
 								//arrData.push(JSON.stringify(tempdata)); //이렇게 하면안됨, db insert함수의 인자로는 object를 주어야함
 								arrData.push(tempdata);
@@ -470,7 +472,7 @@ router.post("/celldown", function(req, res){
 									var model1 = [ 
 										{ displayName: '宝贝id', access: 'SPU_ID', type: 'number' },  //spu_id
 										{ displayName: '宝贝标题', access: '货品名称', type: 'string' },  //hm
-										{ displayName: 'SKUid', access: 'SKU_id', type: 'number' },  //sku_id
+										{ displayName: 'SKUid', access: 'SKU_ID', type: 'number' },  //sku_id
 										{ displayName: 'SKU名称', access: '색상+사이즈', type: 'string' },  //hm
 										{ displayName: '宝贝当前库存', access: '재고', type: 'number' }, //재고 
 										{ displayName: '货品编码', access: 'SKU', type: 'string' },  //sku
@@ -512,7 +514,49 @@ router.post("/celldown", function(req, res){
 										{ displayName: '重量-运输单元', access: '-', type: 'number' },  //
 										{ displayName: '税率（%）', access: '-', type: 'number' },  //
 										{ displayName: '税率分类编码', access: '-', type: 'number' },  //
-										{ displayName: '包含电池', access: '-', type: 'number' }]  //일단 AJ열까지
+										{ displayName: '包含电池', access: '-', type: 'number' }, // AJ열까지
+										{ displayName: '生产批号管理', access: '-', type: 'number' },
+										{ displayName: '包装方式(已弃用，请勿设置)', access: '-', type: 'number' },
+										{ displayName: '子货品1编码', access: '-', type: 'number' },
+										{ displayName: '子货品1数量', access: '-', type: 'number' },
+										{ displayName: '子货品2编码', access: '-', type: 'number' },
+										{ displayName: '子货品2数量', access: '-', type: 'number' },
+										{ displayName: '子货品3编码', access: '-', type: 'number' },
+										{ displayName: '子货品3数量', access: '-', type: 'number' },
+										{ displayName: '子货品4编码', access: '-', type: 'number' },
+										{ displayName: '子货品4数量', access: '-', type: 'number' },
+										{ displayName: '子货品5编码', access: '-', type: 'number' },
+										{ displayName: '子货品5数量', access: '-', type: 'number' },
+										{ displayName: '子货品6编码', access: '-', type: 'number' },
+										{ displayName: '子货品6数量', access: '-', type: 'number' },
+										{ displayName: '子货品7编码', access: '-', type: 'number' },
+										{ displayName: '子货品7数量', access: '-', type: 'number' },
+										{ displayName: '子货品8编码', access: '-', type: 'number' },
+										{ displayName: '子货品8数量', access: '-', type: 'number' },
+										{ displayName: '子货品9编码', access: '-', type: 'number' },
+										{ displayName: '子货品9数量', access: '-', type: 'number' },
+										{ displayName: '子货品10编码', access: '-', type: 'number' },
+										{ displayName: '子货品10数量', access: '-', type: 'number' },
+										{ displayName: '子货品11编码', access: '-', type: 'number' },
+										{ displayName: '子货品11数量', access: '-', type: 'number' },
+										{ displayName: '子货品12编码', access: '-', type: 'number' },
+										{ displayName: '子货品12数量', access: '-', type: 'number' },
+										{ displayName: '子货品13编码', access: '-', type: 'number' },
+										{ displayName: '子货品13数量', access: '-', type: 'number' },
+										{ displayName: '子货品14编码', access: '-', type: 'number' },
+										{ displayName: '子货品14数量', access: '-', type: 'number' },
+										{ displayName: '子货品15编码', access: '-', type: 'number' },
+										{ displayName: '子货品15数量', access: '-', type: 'number' },
+										{ displayName: '子货品16编码', access: '-', type: 'number' },
+										{ displayName: '子货品16数量', access: '-', type: 'number' },
+										{ displayName: '子货品17编码', access: '-', type: 'number' },
+										{ displayName: '子货品17数量', access: '-', type: 'number' },
+										{ displayName: '子货品18编码', access: '-', type: 'number' },
+										{ displayName: '子货品18数量', access: '-', type: 'number' },
+										{ displayName: '子货品19编码', access: '-', type: 'number' },
+										{ displayName: '子货品19数量', access: '-', type: 'number' },
+										{ displayName: '子货品20编码', access: '-', type: 'number' },
+										{ displayName: '子货品20数量', access: '-', type: 'number' }] 
 								
 									var model3 = [ 
 											{ displayName: '货品ID*', access: 'SPU_ID', type: 'string' },  //
@@ -520,12 +564,12 @@ router.post("/celldown", function(req, res){
 											{ displayName: '规格型号*', access: '색상+사이즈', type: 'string' },  //
 											{ displayName: '主要成分*', access: '소재', type: 'string' },  //
 											{ displayName: '用途*', access: '用途', type: 'string' },  //
-											{ displayName: '商品备案价格（人民币：元）*', access: '-', type: 'string' },  //
+											{ displayName: '商品备案价格（人民币：元）*', access: '판매가', type: 'string' },  //
 											{ displayName: '生产企业*', access: '브랜드品牌', type: 'string' },  //
 											{ displayName: '销售单位*', access: '011', type: 'string' },  // 텍스트
 											{ displayName: '销售包装*', access: '盒装', type: 'string' },  // 텍스트
 											{ displayName: '品牌*', access: '브랜드品牌', type: 'string' },  //
-											{ displayName: '前端宝贝链接', access: '-', type: 'string' },  // 상품등록링크
+											{ displayName: '前端宝贝链接', access: 'link', type: 'string' },  // 상품등록링크
 											{ displayName: '贸易国*', access: '韩国', type: 'string' },  //
 											{ displayName: '启运国*', access: '韩国', type: 'string' },  //
 											{ displayName: '原产国*', access: '韩国', type: 'string' },  //
@@ -543,14 +587,15 @@ router.post("/celldown", function(req, res){
 					
 									//excell에 쓰기.
 									/* Generate Excel */
+									console.log("파일 저장위치 : "+__dirname);
 									mongoXlsx.mongoData2Xlsx(arrData, model1, function(err, data) {
-										console.log('File saved at:', data.fullPath); 
+										console.log('시트1번 이름 :', data.fullPath); 
 									});
 									mongoXlsx.mongoData2Xlsx(arrData, model2, function(err, data) {
-										console.log('File saved at:', data.fullPath); 
+										console.log('시트2번 이름 :', data.fullPath); 
 									});
 									mongoXlsx.mongoData2Xlsx(arrData, model3, function(err, data) {
-										console.log('File saved at:', data.fullPath); 
+										console.log('시트3번 이름 :', data.fullPath); 
 									});
 									
 									//화면에 엑셀하나 띄워줌
