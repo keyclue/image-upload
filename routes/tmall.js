@@ -131,13 +131,10 @@ router.post("/orders", function (req, res) {
 
 	var date_Split = date.split(' - ');
 	var date_Start = date_Split[0].split('/');
-
 	var date_startReplace = date_Start[2] + '-' + date_Start[0] + '-' + date_Start[1];
-
 	var date_end = date_Split[1].split('/');
 	var date_endReplace = date_end[2] + '-' + date_end[0] + '-' + date_end[1];
 	// datepicker 포맷을 타오바오 날짜 형식으로 변경
-
 	var brand = {};
 	var Props = {};
 	var arrData = [];
@@ -312,7 +309,7 @@ router.post("/orders", function (req, res) {
 //brandList를 업데이트하기위한 코드
 router.get("/cellupdate", function (req, res) {
 	client.execute('taobao.sellercats.list.get', {
-		'session': '610112705e986a0941348b0a68bad97b5001bcd30cbc0f13031625218',
+		'session': process.env.TMALL_SESSION,
 		'nick': 'keyclue海外旗舰店',
 		'fields': 'cid,name'
 	}, function (error, response) {
