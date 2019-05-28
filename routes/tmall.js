@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var User = require('../models/user');
-var xlsx = require('xlsx');
+var XLSX = require('xlsx');
 var request = require('request');
 var fs = require('fs');
 var multer = require('multer');
@@ -20,6 +20,8 @@ var client = new ApiClient({
 	appsecret: process.env.TMALL_API_SECRET,
 	REST_URL: 'http://gw.api.taobao.com/router/rest'
 });
+
+var items_schema = '';
 
 var storage = multer.diskStorage({
 	destination: function (req, file, cb) {
@@ -79,7 +81,9 @@ router.post('/item', function (req, res) {
 		},
 		function (error, response) {
 			if (!error) {
+				//console.log(response);
 				var Products = response.items.item;
+				console.log(Products)
 				console.log(Object.keys(Products).length);
 				Products = tableify(Products);
 				res.render('tmall/tmall-item-success', { Products: Products });
@@ -121,6 +125,16 @@ router.post('/search', function (req, res) {
 	);
 });
 
+var wb = XLSX.utils.book_new();
+function writeit(type, fn) {
+	console.log(fn);
+	XLSX.writeFile(wb, fn || ('ordersheet.' + (type || 'xlsx')));
+}
+
+router.get('/download', function (req, res) {
+	res.download('주문리스트.xls');
+});
+
 router.get('/orders', function (req, res) {
 	res.render('tmall/tmall-orders');
 });
@@ -139,6 +153,13 @@ router.post("/orders", function (req, res) {
 	var Props = {};
 	var arrData = [];
 	var splitInfo = [];
+	var wb = XLSX.utils.book_new();
+
+	function renderOrderInfo(req) {
+		var table = tableify(req);
+		//				console.log(arrData);
+		res.render('tmall/tmall-orders-success', { table: table, wb: wb });
+	}
 
 	client.execute('taobao.trades.sold.get', {
 		'session': process.env.TMALL_SESSION,
@@ -154,11 +175,8 @@ router.post("/orders", function (req, res) {
 		if (!error && total_results != 0) {
 			var Trades = response.trades.trade;
 			var index = 0;
-			function renderOrderInfo() {
-				var table = tableify(arrData);
-				//				console.log(arrData);
-				res.render('tmall/tmall-orders-success', { table: table });
-			}
+
+
 			//			console.log(Trades);
 			Trades.forEach(function (Trade) {
 				if (Trade.orders && Trade.pay_time) {
@@ -192,6 +210,7 @@ router.post("/orders", function (req, res) {
 											'num_iid': Order.num_iid
 										}, function (error, response) {
 											if (!error) {
+												console.log("product_id=", response.item.product_id);
 												client.execute('taobao.product.get', {
 													'session': process.env.TMALL_SESSION, //브랜드명 가져오기
 													'fields': 'props_str',
@@ -256,8 +275,16 @@ router.post("/orders", function (req, res) {
 														if (index1 === num_items) {
 															index++;
 															if (index === total_results) {
-																arraysort(arrData, '주문날짜', '고객ID');
-																renderOrderInfo();
+																//																arraysort(arrData, '주문날짜', '고객ID');
+																arraysort(arrData, '브랜드');
+																//																console.log(arrData);
+																//	var realjson = JSON.parse(arrData); // 파일 실행이 끝나면 realjson의 값을 없애야 한다.
+																var ws = XLSX.utils.json_to_sheet(arrData);
+																XLSX.utils.book_append_sheet(wb, ws, 'order');
+																//																fs.writeFileSync('주문리스트.xls', wb, 'binary');
+																//															console.log(wb);
+																XLSX.writeFile(wb, '주문리스트.xls', { bookType: "biff8", sheet: "" })
+																renderOrderInfo(arrData);
 															}
 														}
 													}
@@ -306,6 +333,9 @@ router.post("/orders", function (req, res) {
 	});
 });
 
+
+
+
 //brandList를 업데이트하기위한 코드
 router.get("/cellupdate", function (req, res) {
 	client.execute('taobao.sellercats.list.get', {
@@ -352,7 +382,7 @@ router.post("/celldown", function (req, res) {
 
 	fs.readFile('./routes/brandData/brand.txt', 'utf-8', function (error, data) {
 		var brandList = JSON.parse(data);
-		//console.log(brandList);
+		console.log(brandList);
 
 		for (var i in brandList) {
 			if (brandList[i] == req.body.brandName) {
@@ -407,7 +437,7 @@ router.post("/celldown", function (req, res) {
 							var ri = response.item;
 							var rs = response.item.skus.sku;
 							// console.log(ri);
-							// console.log(rs);
+							console.log(rs);
 							//console.log("Brand name is " +req.body.brandName);
 							//sku숫자만큼 반복
 							for (var k in rs) {
@@ -586,4 +616,141 @@ router.post("/celldown", function (req, res) {
 	});
 
 });
+
+router.get('/items', function (req, res) {
+	table = "Get item shema!"
+	res.render('tmall/tmall-items', { table: table });
+});
+
+router.post("/items", function (req, res) {
+
+	var pid = req.body.pid;
+	var cid = req.body.cid;
+	console.log(pid, " ", cid)
+
+	client.execute('tmall.item.add.schema.get', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': '996458222',
+		'category_id': '50008904',
+	}, function (error, response) {
+		if (!error) {
+			//		console.log(response);
+			items_schema = response.add_item_result;
+			res.render('tmall/tmall-items', { table: items_schema });
+
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/tmall-items', { table: table });
+		}
+	});
+
+});
+
+
+
+router.all("/itemsadd", function (req, res) {
+
+	console.log(items_schema)
+
+	client.execute('tmall.item.calculate.hscode.get', {
+		'item_id': '12345'
+	}, function (error, response) {
+		if (!error) console.log(response);
+		else console.log(error);
+	})
+
+	client.execute('tmall.item.schema.add', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': '99999999',
+		'category_id': '50008904',
+		'xml_data': '<rules><field id=\"prop_20000\" isInput=\"true\">Apple</field></rules>'
+	}, function (error, response) {
+		if (!error) {
+			//				console.log(response);
+			var table = "item added";
+			//console.log(table)
+			res.render('tmall/itemsadd', { table: response });
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/itemsadd', { table: table });
+		}
+	});
+});
+
+router.get('/product_schema', function (req, res) {
+	res.render('tmall/tmall-product', { data: "Get Schema!", table: '' });
+});
+
+router.post("/product_schema", function (req, res) {
+
+	var data;
+	client.execute('tmall.product.match.schema.get', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': '996458222',
+		'category_id': '50008904',
+	}, function (error, response) {
+		if (!error) {
+			data = response.match_result;
+			console.log(response);
+			//console.log(table)
+			var table = tableify(response);
+			res.render('tmall/tmall-product', { data: data, table: table });
+
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/tmall-product', { table: table });
+		}
+	});
+});
+
+router.get('/product', function (req, res) {
+	res.render('tmall/tmall-product', { data: "Get Schema!", table: '' });
+});
+
+router.post("/product", function (req, res) {
+
+	var data;
+	client.execute('tmall.product.match.schema.get', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': '996458222',
+		'category_id': '50008904',
+	}, function (error, response) {
+		if (!error) {
+			data = response.match_result;
+			console.log(response);
+			client.execute('tmall.product.schema.add', {
+				'session': process.env.TMALL_SESSION,
+				'product_id': '996458222',
+				'category_id': '50008904',
+				'xml_data': data
+			}, function (error, response) {
+				if (!error) {
+					data = response.match_result;
+					console.log(response);
+					//console.log(table)
+					var table = tableify(response);
+					res.render('tmall/tmall-product', { data: data, table: table });
+
+				}
+				else {
+					console.log(error);
+					var table = tableify(error)
+					res.render('tmall/tmall-product', { table: table });
+				}
+			});
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/tmall-product', { table: table });
+		}
+	});
+});
+
 module.exports = router;

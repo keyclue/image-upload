@@ -3,27 +3,48 @@
     <h1 style="text-align: center">아이템 관리</h1>
 </div>
 <br>
-<form action="item" method="post">
-    <div class="btn-group row text-center">
-        <div class="form-group col-6 mr-2">
+<div style="width: 30%; margin: 25px auto;">
+    <form action="items" method="post">
+        <div class="form-group">
             <input class="form-control " id="dates" type="text" Placeholder="입력일자" name="dates" />
+        </div>
+        <div class="form-goup">
+            <input class="form-control " id="dates" type="text" Placeholder="product_id" name="pid" />
+        </div>
+        <br>
+        <div class="form-group">
+            <input class="form-control " id="keyword" type="text" Placeholder="category_id" name="cid" />
         </div>
         <div class="form-group mr-2">
             <input class="form-control " id="keyword" type="text" Placeholder="keyword" name="keyword" />
         </div>
-        <div class="form-goup mr-2">
-            <input class="btn btn-outline-secondary" type="submit" name="submit" value="제품 보기" />
+        <input class="btn btn-outline-secondary btn-block" type="submit" name="items" value="items">
+    </form>
+</div>
+<nav class="navbar nav-bottom navbar-expand-sm navbar-light bg-light mx-auto">
+    <form action="item" method="post">
+        <div class="form-group col-sm mr-2">
+            <input class="form-control " id="dates" type="text" name="dates" />
+            <input class="form-control " id="dates" type="text" Placeholder="product_id" name="pid" />
+            <input class="form-control " id="keyword" type="text" Placeholder="category_id" name="cid" />
+            <input class="btn btn-outline-secondary" type="submit" name="item" value="item">
         </div>
-    </div>
-</form>
+    </form>
+</nav>
+<br>
 <div id="datatable" class="no-more-tables" contenteditable='true'>
     <%- Products %>
 </div>
 <br>
-<div style="mx-auto" style="text-align: center">
-    <a href="/tmall"><button class="btn btn-outline-secondary">티몰관리 홈</button></a>
-    <a href="/api"><button class="btn btn-outline-secondary">관리 홈</button></a>
-</div>
+<nav class="navbar nav-bottom navbar-expand-sm navbar-light bg-light">
+    <div class="mx-auto">
+        <a href="/tmall/orders"><button class="btn btn-outline-secondary">다른 티몰오더보기</button></a>
+        <a href="/tmall/item"><button class="btn btn-outline-secondary">티몰 제품관리</button></a>
+        <a href="/tmall/search"><button class="btn btn-outline-secondary">티몰 제품검색</button></a>
+        <a href="/tmall"><button class="btn btn-outline-secondary">티몰 홈</button></a>
+        <a href="/api"><button class="btn btn-outline-secondary">관리 홈</button></a>
+    </div>
+</nav>
 
 
 <% include ../partials/scripts %>

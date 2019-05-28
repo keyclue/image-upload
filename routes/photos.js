@@ -68,9 +68,40 @@ router.post('/', middleware.isLoggedIn, upload.single('image'), function (req, r
 	});
 });
 
+router.post('/backgroundr', middleware.isLoggedIn, upload.single('image'), function (req, res) {
+	cloudinary.v2.uploader.upload(req.file.path,
+		{ background_removal: "pixelz" },
+		function (err, result) {
+			if (err) {
+				req.flash('error', err.message);
+				return res.redirect('back');
+			}
+			// add cloudinary url for the image to the photo object under image property
+			req.body.photo.image = result.secure_url;
+			// add image's public_id to photo object
+			req.body.photo.imageId = result.public_id;
+			// add author to photo
+			req.body.photo.author = {
+				id: req.user._id,
+				username: req.user.username
+			};
+			photo.create(req.body.photo, function (err, photo) {
+				if (err) {
+					req.flash('error', err.message);
+					return res.redirect('back');
+				}
+				res.redirect('/cliped-photos/' + photo.id);
+			});
+		});
+});
+
 //NEW - show form to create new photo
 router.get('/new', middleware.isLoggedIn, function (req, res) {
 	res.render('photos/new');
+});
+
+router.get('/clip', middleware.isLoggedIn, function (req, res) {
+	res.render('photos/clip');
 });
 
 /*NEW - show form to create new photo drag and drop 

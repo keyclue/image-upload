@@ -6,14 +6,17 @@
 </div>
 <div id="datatable" class="no-more-tables" contenteditable='true'>
     <%- table %>
+
 </div>
-<br>
+<div style="width: 30%; margin: 10px auto;">
+    <form action="download" method="get">
+        <div class="form-goup">
+            <input class="btn btn-outline-secondary btn-block" type="submit" name="submit" value="Export to XLS!">
+        </div>
+    </form>
+</div>
 <nav class="navbar nav-bottom navbar-expand-sm navbar-light bg-light">
     <div class="mx-auto">
-        <!--           <div class="form-goup" id="xportxlsx">  -->
-        <input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to XLSX!"
-            onclick="doit('xlsx', '주문화일.xlsx');">
-        <!--            </div>  -->
         <a href="/tmall/orders"><button class="btn btn-outline-secondary">다른 티몰오더보기</button></a>
         <a href="/tmall/item"><button class="btn btn-outline-secondary">티몰 제품관리</button></a>
         <a href="/tmall/search"><button class="btn btn-outline-secondary">티몰 제품검색</button></a>

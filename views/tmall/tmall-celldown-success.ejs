@@ -1,17 +1,35 @@
 <% include ../partials/header %>
+<% include ../partials/sheetjs %>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <div class="container">
-    <div >
+    <div>
         <h1 style="text-align: center">해관신청용 엑셀시트 다운로드성공</h1>
-        
-        <div id="data-table">
+        <div id="datatable" class="no-more-tables" contenteditable='true'>
             <%- Orders %>
         </div>
-        
-
-            <a href="/">Go Back</a>
+        <br />
+        <div class="container">
+            <div class="row justify-content-md-center">
+                <div class="form-goup" id="xportxlsx">
+                    <input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to XLSX!"
+                        onclick="doit('xlsx');">
+                </div>
+                <p id="xlsxbtn" class="btn">Flash required for actually downloading the generated file.</p>
+                <div class="form-goup" id="xportcsv">
+                    <input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to XLS!"
+                        onclick="doit('xls');">
+                </div>
+                <p id="xlsbbtn" class="btn">Flash required for actually downloading the generated file.</p>
+                <div class="form-goup" id="xportcsv">
+                    <input class="btn btn-outline-secondary" type="submit" name="submit" value="Export to CSV!"
+                        onclick="doit('csv');">
+                </div>
+                <p id="csvbtn" class="btn">Flash required for actually downloading the generated file.</p>
+            </div>
         </div>
+        <a href="/">Go Back</a>
     </div>
+</div>
 </div>
 <% include ../partials/scripts %>
 <script type="text/javascript" src="/scripts/xlsx-util.js"></script>
