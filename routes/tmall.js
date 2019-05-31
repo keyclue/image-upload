@@ -333,9 +333,6 @@ router.post("/orders", function (req, res) {
 	});
 });
 
-
-
-
 //brandList를 업데이트하기위한 코드
 router.get("/cellupdate", function (req, res) {
 	client.execute('taobao.sellercats.list.get', {
@@ -637,7 +634,6 @@ router.post("/items", function (req, res) {
 			//		console.log(response);
 			items_schema = response.add_item_result;
 			res.render('tmall/tmall-items', { table: items_schema });
-
 		}
 		else {
 			console.log(error);
@@ -648,18 +644,37 @@ router.post("/items", function (req, res) {
 
 });
 
+router.get('/productget', function (req, res) {
 
+	table = "Get product by schema!"
+	res.render('tmall/productget', { table: table });
+});
+
+router.post("/productget", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+
+	client.execute('tmall.product.schema.get', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': product_id,
+		'category_id': category_id
+	}, function (error, response) {
+		if (!error) {
+			console.log(response);
+			var table = tableify(response.get_product_result);
+//			console.log(table)
+			res.render('tmall/productget', { table: table });
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/productget', { table: table });
+		}
+	});
+});
 
 router.all("/itemsadd", function (req, res) {
-
-	console.log(items_schema)
-
-	client.execute('tmall.item.calculate.hscode.get', {
-		'item_id': '12345'
-	}, function (error, response) {
-		if (!error) console.log(response);
-		else console.log(error);
-	})
 
 	client.execute('tmall.item.schema.add', {
 		'session': process.env.TMALL_SESSION,
