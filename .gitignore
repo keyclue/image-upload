@@ -1,8 +1,1 @@
-.env
-/node_modules
-/a-samples
-/a-uploads
-/a-outputs
-.eslintrc
-.prettierrc
-user-settings.json
+node_modules
