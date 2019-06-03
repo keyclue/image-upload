@@ -7,18 +7,17 @@
         <%- table %>
     </div>
     <br>
-    <form action="productget" method="post">
-        <div class="form-goup">
-            <input class="form-control " id="dates" type="text" Placeholder="product_id" name="product_id" />
-        </div>
-        <br>
-        <div class="form-group">
-            <input class="form-control " id="keyword" type="text" Placeholder="category_id" name="category_id" />
-        </div>
-        <input class="btn btn-outline-secondary btn-block" type="submit" name="get_product" value="Get product!">
-    </form>
+    <form>
+    <div class="form-goup">
+        <input class="form-control " id="dates" type="text" Placeholder="product_id" name="product_id" />
+    </div>
     <br>
-    <a href="/tmall/items"><button class="btn btn-outline-secondary btn-block">item schema</button></a>
+    <div class="form-group">
+        <input class="form-control" id="keyword" type="text" Placeholder="category_id" name="category_id" />
+    </div>
+    <button formaction="productget" method="post" class="btn btn-outline-secondary btn-block" type="submit" name="get_product">Get product!</button>
+    <button formaction="product_schema" method="post" class="btn btn-outline-secondary btn-block" type="submit" name="get_schema">Get schema!</button>
+    </form>
     <br>
     <a href="/tmall/itemsadd"><button class="btn btn-outline-secondary btn-block">item add</button></a>
     <br>
