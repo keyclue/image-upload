@@ -614,67 +614,16 @@ router.post("/celldown", function (req, res) {
 
 });
 
-router.get('/items', function (req, res) {
-	table = "Get item shema!"
-	res.render('tmall/tmall-items', { table: table });
-});
-
-router.post("/items", function (req, res) {
-
-	var pid = req.body.pid;
-	var cid = req.body.cid;
-	console.log(pid, " ", cid)
-
-	client.execute('tmall.item.add.schema.get', {
-		'session': process.env.TMALL_SESSION,
-		'product_id': '996458222',
-		'category_id': '50008904',
-	}, function (error, response) {
-		if (!error) {
-			//		console.log(response);
-			items_schema = response.add_item_result;
-			res.render('tmall/tmall-items', { table: items_schema });
-		}
-		else {
-			console.log(error);
-			var table = tableify(error)
-			res.render('tmall/tmall-items', { table: table });
-		}
-	});
-
-});
 
 
-
-router.all("/itemsadd", function (req, res) {
-
-	client.execute('tmall.item.schema.add', {
-		'session': process.env.TMALL_SESSION,
-		'product_id': '99999999',
-		'category_id': '50008904',
-		'xml_data': '<rules><field id=\"prop_20000\" isInput=\"true\">Apple</field></rules>'
-	}, function (error, response) {
-		if (!error) {
-			//				console.log(response);
-			var table = "item added";
-			//console.log(table)
-			res.render('tmall/itemsadd', { table: response });
-		}
-		else {
-			console.log(error);
-			var table = tableify(error)
-			res.render('tmall/itemsadd', { table: table });
-		}
-	});
-});
 
 router.get('/product', function (req, res) {
 
 	table = "Get product by schema!"
-	res.render('tmall/productget', { table: table });
+	res.render('tmall/product', { table: table });
 });
 
-router.all("/productget", function (req, res) {
+router.post("/product", function (req, res) {
 
 	var product_id = req.body.product_id;
 	var category_id = req.body.category_id;
@@ -690,23 +639,20 @@ router.all("/productget", function (req, res) {
 			console.log(response);
 			var table = tableify(response.get_product_result);
 //			console.log(table)
-			res.render('tmall/productget', { table: table });
+			res.render('tmall/product', { table: table });
 		}
 		else {
 			console.log("error= ",error);
 			var table = tableify(error)
-			res.render('tmall/productget', { table: table });
+			res.render('tmall/product', { table: table });
 		}
 	});
 });
 
-router.get('/product_schema', function (req, res) {
-	res.render('tmall/tmall-product', { data: "Get Schema!", table: '' });
-});
-
 router.post("/product_schema", function (req, res) {
 
-	var data;
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
 	client.execute('tmall.product.match.schema.get', {
 		'session': process.env.TMALL_SESSION,
 		'product_id': product_id,
@@ -717,57 +663,83 @@ router.post("/product_schema", function (req, res) {
 			console.log(response);
 			//console.log(table)
 			var table = tableify(response);
-			res.render('tmall/productget', { data: data, table: table });
+			res.render('tmall/product', { data: data, table: table });
 
 		}
 		else {
 			console.log(error);
 			var table = tableify(error)
-			res.render('tmall/productget', { table: table });
+			res.render('tmall/product', { table: table });
 		}
 	});
 });
 
-router.get('/product', function (req, res) {
-	res.render('tmall/tmall-product', { data: "Get Schema!", table: '' });
-});
+router.post("/item_schema", function (req, res) {
 
-router.post("/product", function (req, res) {
 
-	var data;
-	client.execute('tmall.product.match.schema.get', {
+	client.execute('tmall.item.add.schema.get', {
 		'session': process.env.TMALL_SESSION,
-		'product_id': '996458222',
-		'category_id': '50008904',
+		'product_id': product_id,
+		'category_id': category_id
 	}, function (error, response) {
 		if (!error) {
 			data = response.match_result;
 			console.log(response);
-			client.execute('tmall.product.schema.add', {
-				'session': process.env.TMALL_SESSION,
-				'product_id': '996458222',
-				'category_id': '50008904',
-				'xml_data': data
-			}, function (error, response) {
-				if (!error) {
-					data = response.match_result;
-					console.log(response);
-					//console.log(table)
-					var table = tableify(response);
-					res.render('tmall/tmall-product', { data: data, table: table });
+			//console.log(table)
+			var table = tableify(response);
+			res.render('tmall/product', { data: data, table: table });
 
-				}
-				else {
-					console.log(error);
-					var table = tableify(error)
-					res.render('tmall/tmall-product', { table: table });
-				}
-			});
 		}
 		else {
 			console.log(error);
 			var table = tableify(error)
-			res.render('tmall/tmall-product', { table: table });
+			res.render('tmall/product', { table: table });
+		}
+	});
+
+});
+
+router.all("/itemsadd", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+	client.execute('tmall.item.schema.add', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': product_id,
+		'category_id': category_id,
+		'xml_data': '<rules><field id=\"prop_20000\" isInput=\"true\">Apple</field></rules>'
+	}, function (error, response) {
+		if (!error) {
+			//				console.log(response);
+			var table = "item added";
+			//console.log(table)
+			res.render('tmall/pproduct', { table: response });
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
+		}
+	});
+});
+router.post("/product_match", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+	client.execute('tmall.product.match.schema.get', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': product_id,
+		'category_id': category_id
+	}, function (error, response) {	
+		if (!error) {
+			data = response.match_result;
+			console.log(data);
+			res.render('tmall/product', { data: data, table: table });
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
 		}
 	});
 });
