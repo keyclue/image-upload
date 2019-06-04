@@ -1,6 +1,11 @@
 <% include ../partials/header %>
 <div class="jumbotron">
-    <h1 style="text-align: center">티몰 업로드 관리</h1>
+    <h1 style="text-align: center">티몰 상품관리</h1>
+</div>
+<div style="width: 30%; margin: 25px auto;">
+    <a href="/tmall"><button class="btn btn-outline-secondary btn-block">티몰 홈</button></a>
+    <br>
+    <a href="/api"><button class="btn btn-outline-secondary btn-block">관리 홈</button></a>
 </div>
 <div style="width: 30%; margin: 25px auto;">
     <%- data %>
@@ -16,17 +21,24 @@
     <div class="form-group">
         <input class="form-control" id="keyword" type="text" Placeholder="category_id" name="category_id" />
     </div>
-    <input formaction="product" class="btn btn-outline-secondary btn-block" type="submit" name="Get item" value="Get Product!">
-    <input formaction="product_schema" class="btn btn-outline-secondary btn-block" type="submit" name="Get Schema" value="Get Product Schema!">
-    <input formaction="product_match" class="btn btn-outline-secondary btn-block" type="submit" name="product match" value="Get Product Match!">
-    <input formaction="item_schema" class="btn btn-outline-secondary btn-block" type="submit" name="Get Schema" value="Get Item Schema!">
-    <input formaction="itemsadd" class="btn btn-outline-secondary btn-block" type="submit" name="itemsadd" value="Add Items!">
+    </div>
+    <div class='row'>
+        <input formaction="product_schema" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="Get Schema" value="Get Product Schema!">
+        <input formaction="product_match" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="product match" value="Get Product Match Get!">
+        <input formaction="product_match_get" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="product match" value="Get Product Match!">
+        <input formaction="item_schema" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="Get Schema" value="Get Item Schema!">
+        <input formaction="itemsadd" class="btn btn-outline-secondary  col-2 mx-auto mt-2" type="submit" name="itemsadd" value="Add Items!">
+    </div>
+    <div class=row>
+        <input formaction="item_simpleschema_get" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="simple get" value="Simpleschema Items get!">
+        <input formaction="item_simpleschema_add" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="simple add" value="Simpleschema Items Add!">
+        <input formaction="item_cats" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="item_cats" value="item_cats">
+        <input formaction="item_authorize_cats" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="item_autorize_cats" value="item_autorize_cats">
+        <input formaction="product" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="Get item" value="Get Product!">
+    </div>
     </form>
     <br>
-    <a href="/tmall/search"><button class="btn btn-outline-secondary btn-block">티몰 홈</button></a>
-    <br>
-    <a href="/api"><button class="btn btn-outline-secondary btn-block">관리 홈</button></a>
-</div>
+
 
 <% include ../partials/scripts %>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>

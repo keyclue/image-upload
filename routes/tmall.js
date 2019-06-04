@@ -619,8 +619,9 @@ router.post("/celldown", function (req, res) {
 
 router.get('/product', function (req, res) {
 
-	table = "Get product by schema!"
-	res.render('tmall/product', { table: table });
+	var table = "Get product by schema!"
+	var data = ""
+	res.render('tmall/product', { table: table, data: data });
 });
 
 router.post("/product", function (req, res) {
@@ -699,7 +700,7 @@ router.post("/item_schema", function (req, res) {
 
 });
 
-router.all("/itemsadd", function (req, res) {
+router.post("/itemsadd", function (req, res) {
 
 	var product_id = req.body.product_id;
 	var category_id = req.body.category_id;
@@ -713,7 +714,7 @@ router.all("/itemsadd", function (req, res) {
 			//				console.log(response);
 			var table = "item added";
 			//console.log(table)
-			res.render('tmall/pproduct', { table: response });
+			res.render('tmall/product', { table: response });
 		}
 		else {
 			console.log(error);
@@ -722,10 +723,62 @@ router.all("/itemsadd", function (req, res) {
 		}
 	});
 });
-router.post("/product_match", function (req, res) {
+
+router.post("/item_simpleschema_get", function (req, res) {
 
 	var product_id = req.body.product_id;
 	var category_id = req.body.category_id;
+	client.execute('tmall.item.add.simpleschema.get', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': product_id,
+		'category_id': category_id
+	}, function (error, response) {
+		if (!error) {
+			data = response.match_result;
+			console.log(response);
+			//console.log(table)
+			var table = tableify(response);
+			res.render('tmall/product', { data: data, table: table });
+
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
+		}
+	});
+
+});
+
+router.post("/item_simpleschema_add", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+	client.execute('tmall.item.simpleschema.add', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': product_id,
+		'category_id': category_id,
+		'xml_data': '<rules><field id=\"prop_20000\" isInput=\"true\">Apple</field></rules>'
+	}, function (error, response) {
+		if (!error) {
+			//				console.log(response);
+			var table = "item added";
+			//console.log(table)
+			res.render('tmall/product', { table: response });
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
+		}
+	});
+});
+
+router.post("/product_match_get", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+
 	client.execute('tmall.product.match.schema.get', {
 		'session': process.env.TMALL_SESSION,
 		'product_id': product_id,
@@ -733,11 +786,78 @@ router.post("/product_match", function (req, res) {
 	}, function (error, response) {	
 		if (!error) {
 			data = response.match_result;
-			console.log(data);
+			console.log(response);
+			table = tableify(data);
 			res.render('tmall/product', { data: data, table: table });
 		}
 		else {
 			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
+		}
+	});
+});
+
+router.post("/product_match", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+
+	client.execute('tmall.product.schema.match', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': product_id,
+		'category_id': category_id
+	}, function (error, response) {	
+		if (!error) {
+			data = response.match_result;
+			console.log(response);
+			table = tableify(data);
+			res.render('tmall/product', { data: data, table: table });
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
+		}
+	});
+});
+
+router.post("/item_authorize_cats", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+
+	client.execute('taobao.itemcats.get', {
+		'session': process.env.TMALL_SESSION,
+		'fields':'brand.vid, brand.name'
+	}, function(error, response) {
+		if (!error) {
+			console.log(response.seller_authorize.brands.brand);
+			table = tableify(response.seller_authorize.brands.brand);
+			res.render('tmall/product', { data: data, table: table });
+		}
+		else {
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
+		}
+	});
+});
+
+router.post("/item_cats", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+
+	client.execute('taobao.itemcats.get', {
+		'session': process.env.TMALL_SESSION,
+		'fields':'brand.vid, brand.name'
+	}, function(error, response) {
+		if (!error) {
+			console.log(response);
+			table = tableify(response.brands.brand);
+			res.render('tmall/product', { data: data, table: table });
+		}
+		else {
 			var table = tableify(error)
 			res.render('tmall/product', { table: table });
 		}
