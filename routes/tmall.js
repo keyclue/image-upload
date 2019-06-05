@@ -650,7 +650,7 @@ router.post("/product", function (req, res) {
 	});
 });
 
-router.post("/product_schema", function (req, res) {
+router.post("/product_match_schema", function (req, res) {
 
 	var product_id = req.body.product_id;
 	var category_id = req.body.category_id;
@@ -675,8 +675,32 @@ router.post("/product_schema", function (req, res) {
 	});
 });
 
-router.post("/item_schema", function (req, res) {
+router.post("/product_schema", function (req, res) {
 
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+	client.execute('tmall.product.add.schema.get', {
+		'session': process.env.TMALL_SESSION,
+		'product_id': product_id,
+		'category_id': category_id
+	}, function (error, response) {
+		if (!error) {
+			data = response.match_result;
+			console.log(response);
+			//console.log(table)
+			var table = tableify(response);
+			res.render('tmall/product', { data: data, table: table });
+
+		}
+		else {
+			console.log(error);
+			var table = tableify(error)
+			res.render('tmall/product', { table: table });
+		}
+	});
+});
+
+router.post("/item_schema", function (req, res) {
 
 	client.execute('tmall.item.add.schema.get', {
 		'session': process.env.TMALL_SESSION,
@@ -786,16 +810,56 @@ router.post("/product_match_get", function (req, res) {
 	}, function (error, response) {	
 		if (!error) {
 			data = response.match_result;
-			console.log(response);
-			table = tableify(data);
-			res.render('tmall/product', { data: data, table: table });
+			client.execute('tmall.product.schema.match', {
+				'session': process.env.TMALL_SESSION,
+				'category_id': category_id,
+				'propvalues': data
+			}, function (error, response) {	
+				if (!error) {
+					data = response.match_result;
+					console.log(response);
+					table = tableify(data);
+					res.render('tmall/product', { data: data, table: table });
+				}
+				else {
+					console.log(error);
+					var table = tableify(error)
+					res.render('tmall/product', { table: table });
+				}
+			});
 		}
 		else {
-			console.log(error);
+			console.log("error2=",error);
 			var table = tableify(error)
 			res.render('tmall/product', { table: table });
 		}
 	});
+});
+
+router.post("/product_add", function (req, res) {
+
+	var product_id = req.body.product_id;
+	var category_id = req.body.category_id;
+
+	var data = '<itemRule><field id="prop_13021751" name="货号" type="input"><rules><rule name="requiredRule" value="true"/></rules></field><field id="prop_20000" name="品牌" type="singleCheck"><rules><rule name="requiredRule" value="true"/></rules><options><option displayName="lartigent" value="726064086"/><option displayName="NOYCOMMON" value="837522601"/><option displayName="VEMVER" value="1154216370"/><option displayName="13month" value="27160010"/><option displayName="BIBYSEOB" value="790378331"/><option displayName="At the moment" value="252274394"/><option displayName="MAIN BOOTH" value="973774876"/><option displayName="GENERAL-COTTON" value="1828417157"/><option displayName="LuvIsTrue" value="998840531"/><option displayName="KEYCLUE" value="1883212677"/><option displayName="eyeye" value="83644670"/><option displayName="ONORE" value="285446314"/><option displayName="WOOZO" value="206146992"/><option displayName="Chae Look" value="2350037137"/><option displayName="FATALISM23" value="2403027716"/><option displayName="JALDOENCASE" value="283207592"/></options></field><field id="material_prop_149422948" name="材质成分" type="multiComplex"><rules><rule name="maxInputNumRule" value="5" exProperty="include"/><rule name="requiredRule" value="true"/></rules><fields><field id="material_prop_name" name="材质" type="singleCheck"><options><option displayName="PU" value="PU"/><option displayName="PVC" value="PVC"/><option displayName="仿皮草" value="仿皮草"/><option displayName="兔毛皮" value="兔毛皮"/><option displayName="头层牛皮" value="头层牛皮"/><option displayName="山羊皮" value="山羊皮"/><option displayName="水貂毛" value="水貂毛"/><option displayName="牛二层皮" value="牛二层皮"/><option displayName="狐狸毛" value="狐狸毛"/><option displayName="猪皮" value="猪皮"/><option displayName="獭兔毛" value="獭兔毛"/><option displayName="紫貂毛" value="紫貂毛"/><option displayName="绵羊皮" value="绵羊皮"/><option displayName="羊皮毛一体" value="羊皮毛一体"/><option displayName="聚酯纤维" value="聚酯纤维"/><option displayName="貉子毛" value="貉子毛"/><option displayName="鹿皮" value="鹿皮"/><option displayName="麂皮" value="麂皮"/><option displayName="其他" value="其他"/></options></field><field id="material_prop_content" name="含量(%)" type="input"><rules><rule name="requiredRule" value="true"/><rule name="disableRule" value="true"><depend-group operator="or"><depend-express fieldId="material_prop_name" value="PU" symbol="=="/><depend-express fieldId="material_prop_name" value="PVC" symbol="=="/><depend-express fieldId="material_prop_name" value="仿皮草" symbol="=="/><depend-express fieldId="material_prop_name" value="兔毛皮" symbol="=="/><depend-express fieldId="material_prop_name" value="头层牛皮" symbol="=="/><depend-express fieldId="material_prop_name" value="山羊皮" symbol="=="/><depend-express fieldId="material_prop_name" value="水貂毛" symbol="=="/><depend-express fieldId="material_prop_name" value="牛二层皮" symbol="=="/><depend-express fieldId="material_prop_name" value="狐狸毛" symbol="=="/><depend-express fieldId="material_prop_name" value="猪皮" symbol="=="/><depend-express fieldId="material_prop_name" value="獭兔毛" symbol="=="/><depend-express fieldId="material_prop_name" value="紫貂毛" symbol="=="/><depend-express fieldId="material_prop_name" value="绵羊皮" symbol="=="/><depend-express fieldId="material_prop_name" value="羊皮毛一体" symbol="=="/><depend-express fieldId="material_prop_name" value="貉子毛" symbol="=="/><depend-express fieldId="material_prop_name" value="鹿皮" symbol="=="/><depend-express fieldId="material_prop_name" value="麂皮" symbol="=="/></depend-group></rule><rule name="valueTypeRule" value="decimal"/><rule name="regexRule" value="^\\d+(\\.\\d{1,2})?$"/><rule name="minValueRule" value="0" exProperty="not include"/><rule name="maxValueRule" value="100" exProperty="include"/></rules></field></fields></field><field id="prop_148380063" name="销售渠道类型" type="singleCheck"><options><option displayName="纯电商(只在线上销售)" value="852538341"/></options></field><field id="prop_122216586" name="服装版型" type="singleCheck"><options><option displayName="直筒" value="29947"/><option displayName="修身" value="130137"/><option displayName="斗篷型" value="27295812"/><option displayName="宽松" value="4043538"/></options></field><field id="prop_122216562" name="款式" type="singleCheck"><options><option displayName="超短" value="6465859"/><option displayName="短款" value="47502"/><option displayName="常规" value="3226292"/><option displayName="中长款" value="44597"/><option displayName="长款" value="66612"/></options></field><field id="prop_20663" name="领型" type="singleCheck"><options><option displayName="立领" value="29541"/><option displayName="圆领" value="29447"/><option displayName="V领" value="29448"/><option displayName="方领" value="29538"/><option displayName="西装领" value="3267189"/><option displayName="娃娃领" value="27316112"/><option displayName="可脱卸帽" value="3267193"/><option displayName="双层领" value="3267194"/><option displayName="一字领" value="29917"/><option displayName="荷叶领" value="9977673"/><option displayName="POLO领" value="3276127"/><option displayName="半开领" value="30066992"/><option displayName="高领" value="29546"/><option displayName="海军领" value="57658638"/><option displayName="堆堆领" value="7486925"/><option displayName="其他" value="20213"/><option displayName="连帽" value="3267192"/><option displayName="半高领" value="29075742"/></options></field><field id="prop_2917380" name="袖型" type="singleCheck"><options><option displayName="飞飞袖" value="95316670"/><option displayName="公主袖" value="11245515"/><option displayName="其他" value="20213"/><option displayName="堆堆袖" value="145654279"/><option displayName="衬衫袖" value="27414723"/><option displayName="插肩袖" value="27414630"/><option displayName="蝙蝠袖" value="7576170"/><option displayName="花瓣袖" value="42625521"/><option displayName="荷叶袖" value="27414678"/><option displayName="常规" value="3226292"/><option displayName="灯笼袖" value="7216758"/><option displayName="包袖" value="27414703"/><option displayName="喇叭袖" value="19306903"/><option displayName="泡泡袖" value="5618747"/></options></field><field id="prop_31611" name="衣门襟" type="singleCheck"><options><option displayName="拉链" value="115481"/><option displayName="单排两粒扣" value="85462454"/><option displayName="三粒扣" value="112633"/><option displayName="其他" value="20213"/></options></field><field id="prop_122216589" name="制作工艺" type="singleCheck"><options><option displayName="磨砂" value="90765"/><option displayName="水洗皮" value="10081169"/><option displayName="压花皮" value="14464883"/><option displayName="漆皮" value="28402"/><option displayName="蛇纹皮" value="16802982"/><option displayName="爆炸皮" value="19778009"/></options></field><field id="prop_20017" name="适用年龄" type="singleCheck"><options><option displayName="30-34周岁" value="494072162"/><option displayName="35-39周岁" value="494072164"/><option displayName="25-29周岁" value="494072160"/><option displayName="18-24周岁" value="494072158"/><option displayName="40-49周岁" value="494072166"/><option displayName="17周岁以下" value="136515180"/></options></field><field id="prop_122216347" name="年份/季节" type="singleCheck"><rules><rule name="requiredRule" value="true"/></rules><options><option displayName="2016年冬季" value="740138901"/><option displayName="2016年夏季" value="828914351"/><option displayName="2016年春季" value="854168429"/><option displayName="2016年秋季" value="728146012"/><option displayName="2017年春季" value="1375048537"/><option displayName="2014年冬季" value="379886796"/><option displayName="2014年夏季" value="379818839"/><option displayName="2014年春季" value="379930774"/><option displayName="2014年秋季" value="380120406"/><option displayName="2015年冬季" value="740132938"/><option displayName="2015年夏季" value="647672577"/><option displayName="2015年春季" value="379874864"/><option displayName="2015年秋季" value="715192583"/><option displayName="2017年夏季" value="828896582"/><option displayName="2017年秋季" value="728066917"/><option displayName="2019年冬季" value="1930994249"/><option displayName="2019年夏季" value="828896460"/><option displayName="2019年春季" value="1767451285"/><option displayName="2019年秋季" value="1930889840"/><option displayName="2011年秋季" value="96618833"/><option displayName="2012年夏季" value="132721297"/><option displayName="2012年冬季" value="132721335"/><option displayName="2012年春季" value="132721270"/><option displayName="2011年夏季" value="96618834"/><option displayName="2011年春季" value="94386424"/><option displayName="2011年冬季" value="96618832"/><option displayName="2012年秋季" value="132721317"/><option displayName="2013年夏季" value="186026840"/><option displayName="2013年春季" value="199870733"/><option displayName="2013年冬季" value="209928863"/><option displayName="2013年秋季" value="209928864"/><option displayName="2017年冬季" value="740150614"/><option displayName="2018年春季" value="1586070154"/><option displayName="2018年夏季" value="828880787"/><option displayName="2018年秋季" value="1586027483"/><option displayName="2018年冬季" value="556502669"/></options></field><field id="product_images" name="产品图片" type="complex"><fields><field id="product_image_0" name="产品图片" type="input"><rules><rule name="valueTypeRule" value="url"/><rule name="requiredRule" value="true"/></rules></field><field id="product_image_1" name="产品图片" type="input"><rules><rule name="valueTypeRule" value="url"/></rules></field><field id="product_image_2" name="产品图片" type="input"><rules><rule name="valueTypeRule" value="url"/></rules></field><field id="product_image_3" name="产品图片" type="input"><rules><rule name="valueTypeRule" value="url"/></rules></field><field id="product_image_4" name="产品图片" type="input"><rules><rule name="valueTypeRule" value="url"/></rules></field></fields></field></itemRule>'
+	
+	client.execute('tmall.product.schema.add', {
+			'session': process.env.TMALL_SESSION,
+			'category_id': category_id,
+			'xml_data': data
+		}, function (error, response) {	
+			if (!error) {
+				data = response.match_result;
+				console.log(response);
+				table = tableify(data);
+				res.render('tmall/product', { data: data, table: table });
+			}
+			else {
+				console.log("error1 = ",error);
+				var table = tableify(error)
+				res.render('tmall/product', { table: table });
+			}
+		});
 });
 
 router.post("/product_match", function (req, res) {
@@ -855,7 +919,7 @@ router.post("/item_cats", function (req, res) {
 		if (!error) {
 			console.log(response);
 			table = tableify(response.brands.brand);
-			res.render('tmall/product', { data: data, table: table });
+			res.render('tmall/product', { data: response, table: table });
 		}
 		else {
 			var table = tableify(error)

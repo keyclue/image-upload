@@ -8,7 +8,7 @@
     <a href="/api"><button class="btn btn-outline-secondary btn-block">관리 홈</button></a>
 </div>
 <div style="width: 30%; margin: 25px auto;">
-    <%- data %>
+    Data = <%- data %>
     <div id="datatable" class="no-more-tables" contenteditable='true'>
         <%- table %>
     </div>
@@ -23,9 +23,9 @@
     </div>
     </div>
     <div class='row'>
+        <input formaction="product_match_get" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="product match" value="Get Product Match Get!">
+        <input formaction="product_add" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="product add" value="Get Product Add!">
         <input formaction="product_schema" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="Get Schema" value="Get Product Schema!">
-        <input formaction="product_match" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="product match" value="Get Product Match Get!">
-        <input formaction="product_match_get" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="product match" value="Get Product Match!">
         <input formaction="item_schema" class="btn btn-outline-secondary col-2 mx-auto mt-2" type="submit" name="Get Schema" value="Get Item Schema!">
         <input formaction="itemsadd" class="btn btn-outline-secondary  col-2 mx-auto mt-2" type="submit" name="itemsadd" value="Add Items!">
     </div>
