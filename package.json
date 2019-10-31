@@ -40,7 +40,7 @@
 		"mongo-xlsx": "^1.0.12",
 		"mongodb": "^2.2.36",
 		"mongodb-core": "^3.1.11",
-		"mongoose": "^5.4.10",
+		"mongoose": "^5.7.5",
 		"multer": "^1.4.1",
 		"node-rest-client-promise": "^3.1.1",
 		"node-xlsx": "^0.12.1",
