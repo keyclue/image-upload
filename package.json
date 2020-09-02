@@ -13,7 +13,7 @@
 	"dependencies": {
 		"array-sort": "^1.0.0",
 		"body-parser": "^1.18.3",
-		"bootstrap-vue": "^2.0.0-rc.11",
+		"bootstrap-vue": "^2.0.0-rc.12",
 		"cloudinary": "^1.13.2",
 		"connect-flash": "^0.1.1",
 		"cookie-parser": "^1.4.3",
