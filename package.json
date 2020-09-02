@@ -27,7 +27,7 @@
 		"fast-csv": "^2.4.1",
 		"fast-xml-parser": "^3.12.13",
 		"flat": "^4.1.0",
-		"googleapis": "^36.0.0",
+		"googleapis": "^39.1.0",
 		"handsontable": "^6.2.2",
 		"he": "^1.2.0",
 		"hoek": "^6.1.2",
