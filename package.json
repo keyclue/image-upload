@@ -38,7 +38,7 @@
 		"json2xls": "^0.1.2",
 		"method-override": "^3.0.0",
 		"mongo-xlsx": "^1.0.12",
-		"mongodb": "^2.2.36",
+		"mongodb": "^3.1.13",
 		"mongodb-core": "^3.1.11",
 		"mongoose": "^5.4.10",
 		"multer": "^1.4.1",
