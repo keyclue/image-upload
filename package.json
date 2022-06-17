@@ -34,7 +34,7 @@
 		"html-tableify": "0.0.2",
 		"i": "^0.3.6",
 		"iconv-lite": "^0.4.24",
-		"jpeg-js": "^0.3.4",
+		"jpeg-js": "^0.4.4",
 		"json2xls": "^0.1.2",
 		"method-override": "^3.0.0",
 		"mongo-xlsx": "^1.0.12",
