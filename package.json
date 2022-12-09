@@ -21,7 +21,7 @@
 		"dotenv": "^4.0.0",
 		"dropzone": "^5.5.1",
 		"ejs": "^2.6.1",
-		"express": "^4.16.4",
+		"express": "^4.17.3",
 		"express-fileupload": "^1.1.1-alpha.1",
 		"express-session": "^1.15.6",
 		"fast-csv": "^2.4.1",
